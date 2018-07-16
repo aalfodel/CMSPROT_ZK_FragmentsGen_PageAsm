@@ -1,0 +1,23 @@
+<zk>
+	<window apply="org.zkoss.bind.BindComposer" viewModel="@id('vm')@init('CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm.CMSPROT_3StepsViewModel')" validationMessages="@id('vmsgs')">
+		<borderlayout height="500px">
+			<center>
+				<label value="HTML"></label>
+			</center>
+			<west>
+				<vbox>
+					<label value="Id"></label>
+					<textbox value="@bind(vm.id)"></textbox>
+					<label value="Paragraph Text"></label>
+					<textbox value="@bind(vm.text)"></textbox>
+					<label value="Color"></label>
+					<radiogroup selectedItem="@bind(vm.color)">
+			            <radio label="Red" value="red"/>
+			            <radio label="Blue" value="blue"/>
+			            <radio label="Green" value="green"/>
+		     		</radiogroup>
+				</vbox>
+			</west>
+		</borderlayout>
+	</window>
+</zk>
