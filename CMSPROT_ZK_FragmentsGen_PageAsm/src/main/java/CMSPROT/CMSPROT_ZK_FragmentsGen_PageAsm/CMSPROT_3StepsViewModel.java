@@ -1,9 +1,9 @@
 package CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm;
 
 public class CMSPROT_3StepsViewModel {
-	String id;
-	String text;
-	String color;
+	private String id;
+	private String text;
+	private String color;
 	
 	//GETTERS SETTERS
 	public String getId() {
