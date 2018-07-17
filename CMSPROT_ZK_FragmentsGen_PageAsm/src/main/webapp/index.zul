@@ -16,6 +16,7 @@
 			            <radio label="Blue" value="blue"/>
 			            <radio label="Green" value="green"/>
 		     		</radiogroup>
+		     		<button label="Generate Page" onClick="@command('genPage')" />
 				</vbox>
 			</west>
 		</borderlayout>
