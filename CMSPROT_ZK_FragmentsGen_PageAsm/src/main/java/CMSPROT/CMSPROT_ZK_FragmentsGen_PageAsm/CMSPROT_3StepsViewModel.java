@@ -14,6 +14,9 @@ import org.zkoss.zk.ui.WebApps;
 import org.zkoss.zul.Iframe;
 
 public class CMSPROT_3StepsViewModel {
+	
+	private Iframe ifr;		//our mainpage on the right side
+	
 	private String id;
 	private String text;
 	private String color;
@@ -44,16 +47,19 @@ public class CMSPROT_3StepsViewModel {
 	@AfterCompose
 	public void startup() throws Exception {
 		
+		//get the iframe component by id
+	    ifr = (Iframe)Path.getComponent("/mainWindow/ifr");		//NOTE: https://www.zkoss.org/wiki/ZK_Developer%27s_Guide/ZK_in_Depth/Component_Path_and_Accesibility/Access_UI_Component
+																//also, remember that if you move the iframe in another position, you'll have to change the path here as well! 
+	    
 	    //initialize PageManipulator
 		String mainPagePath = WebApps.getCurrent().getServletContext().getRealPath("mainpage.html");	//uses ZK to resolve the path to the mainpage
-		/* DEBUG */
-	    System.out.println("**DEBUG** ZK mainPagePath: " + mainPagePath); 
+		/* DEBUG */ System.out.println("**DEBUG** ZK mainPagePath: " + mainPagePath); 
 		PageManipulator.setupPageManipulator(new File(mainPagePath), true);
 	
 	    //initialize FragmentGenerator
 		String templatesFolderName = "templates";
 	    FragmentGenerator.setupFragmentGenerator(templatesFolderName);
-			   
+	    
 	}
 		
 	//PAGE GENERATION
@@ -66,12 +72,10 @@ public class CMSPROT_3StepsViewModel {
 		
 		//rebuild the mainpage with the new fragment
 		String parentId = "0";
-		int fragmentPosition = 1;
+		int fragmentPosition = 0;
 		PageManipulator.addFragment(newFragmentHtml, parentId, fragmentPosition);
 		
-		//get the iframe component by id and invalidate it to force its refreshing
-		Iframe ifr = (Iframe)Path.getComponent("/mainWindow/ifr");		//NOTE: https://www.zkoss.org/wiki/ZK_Developer%27s_Guide/ZK_in_Depth/Component_Path_and_Accesibility/Access_UI_Component
-																		//also, remember that if you move the iframe in another position, you'll have to change the path here as well!
+		//invalidate the iframe to force its refreshing
 		ifr.invalidate();
 	}
 	
