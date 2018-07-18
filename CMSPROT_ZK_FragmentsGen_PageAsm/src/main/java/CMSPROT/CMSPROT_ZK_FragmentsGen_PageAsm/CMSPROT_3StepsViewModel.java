@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Path;
 import org.zkoss.zk.ui.WebApps;
 import org.zkoss.zul.Iframe;
@@ -20,8 +21,7 @@ public class CMSPROT_3StepsViewModel {
 	private String parentId;
 	private int positionBetweenSiblings;
 	
-	private final String zulTemplatesPath = "/WEB-INF/zul_templates/";	
-	private String fragmentTypeZul;
+	private FragmentType fragmType;
 
 	private String text;
 	private String color;
@@ -47,11 +47,32 @@ public class CMSPROT_3StepsViewModel {
 		this.positionBetweenSiblings = positionBetweenSiblings;
 	}
 	
-	public String getFragmentTypeZul() {
-		return fragmentTypeZul;
+	//NOTE: Enum<->String conversions
+	public String getFragmType() {
+		String s;
+		if(fragmType == null)	//to manage startup state, when fragmtType hasn't yet got a @save
+			s = "";		
+		else
+			s = fragmType.toString().toLowerCase();		
+		//System.out.println("**DEBUG** fragmType to lowercase string: " + s);
+		return s;
 	}
-	public void setFragmentTypeZul(String fragmentTypeZul) {
-		this.fragmentTypeZul = zulTemplatesPath + fragmentTypeZul;	//TODO this is just a stub
+	@NotifyChange("fragmTypeZul")
+	public void setFragmType(String fragmType) {
+		this.fragmType = FragmentType.valueOf(fragmType.toUpperCase());
+		//System.out.println("**DEBUG** fragmType: " + this.fragmType);
+	}
+	
+	//variable for Enum -> .zul conversation (ex. FragmentType.PARAGRAPH -> /WEB-INF/zul_templates/paragraph.zul)
+	//NOTE: zul templates must be in /WEB-INF/zul_templates dir and their name must be *all* lowercase
+	//TODO: manage to remove the "all lowercase" restriction for zul template files
+	public String getFragmTypeZul() { 
+		String s;
+		if(fragmType == null)	//to manage startup state, when fragmtType hasn't yet got a @load
+			s = "";
+		else
+			s = "/WEB-INF/zul_templates/" + getFragmType() + ".zul";
+		return s;
 	}
 	
 	public String getText() {
@@ -96,14 +117,7 @@ public class CMSPROT_3StepsViewModel {
 	public void generatePage() throws Exception {
 
 		//generate fragment code with Velocity
-		FragmentType t;
-		if (fragmentTypeZul.equals(zulTemplatesPath + "paragraph.zul"))	//TODO this is a ugly stub
-			t = FragmentType.PARAGRAPH;
-		else if (fragmentTypeZul.equals(zulTemplatesPath + "title.zul"))
-			t = FragmentType.TITLE;
-		else
-			throw new Exception();
-		String newFragmentHtml = fragmentGen.generateFragmentHtml(t, fillPassingMap());
+		String newFragmentHtml = fragmentGen.generateFragmentHtml(fragmType, fillPassingMap());
 		
 		//rebuild the mainpage with the new fragment
 		pageManip.addFragment(newFragmentHtml, parentId, positionBetweenSiblings);

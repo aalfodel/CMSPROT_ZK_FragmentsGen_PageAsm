@@ -25,13 +25,14 @@
 					<space />
 					<hbox>
 						<label value="Choose Fragment Type:"></label>
-						<radiogroup selectedItem="@bind(vm.fragmentTypeZul)">
-							<radio label="Paragraph" value="paragraph.zul"/>
-							<radio label="Title" value="title.zul"/>
+						<radiogroup selectedItem="@bind(vm.fragmType)">
+							<radio label="Paragraph" value="paragraph"/>
+							<radio label="Title" value="title"/>
 						</radiogroup>
 					</hbox>
 					<space />
-					<include src="@bind(vm.fragmentTypeZul)"/>		<!-- NOTE: not using <apply> component because it's not present in ZK CE, but only in ZK EE -->
+					<include src="@load(vm.fragmTypeZul)"/>		<!-- NOTE: I'm not using <apply> component because it's not present in ZK CE, but only in ZK EE -->
+																<!-- also, zul templates must be in /WEB-INF/zul_templates dir and their name must be *all* lowercase -->
 		     		<space />
 		     		<button label="Add Fragment and Renerate Page" onClick="@command('genPage')"/>
 				</vbox>

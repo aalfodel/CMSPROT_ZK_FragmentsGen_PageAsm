@@ -1,6 +1,6 @@
 <vbox>	<!-- NOTE: a wrapper component like this one is mandatory (you can also simply use <zk>) -->
 	<label value="Paragraph Text"></label>
-	<textbox value="@bind(vm.text)"></textbox>	<!-- NOTE: the included zul inherit the father ViewModel -->
+	<textbox value="@bind(vm.text)"></textbox>	<!-- NOTE: the included zul inherits the father ViewModel -->
 	<label value="Color"></label>
 	<radiogroup selectedItem="@bind(vm.color)">
 		<radio label="Red" value="red"/>
