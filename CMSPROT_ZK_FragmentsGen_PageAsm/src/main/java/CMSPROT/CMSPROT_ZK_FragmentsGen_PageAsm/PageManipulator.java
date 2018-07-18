@@ -14,50 +14,50 @@ import org.jsoup.nodes.TextNode;
 
 public class PageManipulator {
 
-	private static boolean _debug;
-	private static File _mainPage;
-	private static Document _docTree;	
+	private boolean debug;
+	private final File mainPage;		//the reference to the mainPage is fixed, but the internal content changes!
+	private final Document docTree;		//the reference to the docTree is fixed, but the internal content changes!
 	
-	//SETUP
+	//CONSTRUCTORS
 	
-	public static void setupPageManipulator(File mainPage, boolean indentation) throws IOException {
-		_debug = false;
+	public PageManipulator(File mainPage, boolean indentation) throws IOException {
+		debug = false;
 		
-		_mainPage = mainPage;
-		_docTree = Jsoup.parse(mainPage, null);
+		this.mainPage = mainPage;
+		docTree = Jsoup.parse(mainPage, null);
 		
 		if(indentation) {
-			_docTree.outputSettings().prettyPrint(true).indentAmount(4);	//sets output indentation
+			docTree.outputSettings().prettyPrint(true).indentAmount(4);	//sets output indentation
 		}
 	}
 	
-	public static void setupPageManipulator(File mainPage, boolean indentation, boolean debug) throws IOException {
-		setupPageManipulator(mainPage, indentation);
-		_debug = debug;
+	public PageManipulator(File mainPage, boolean indentation, boolean debug) throws IOException {
+		this(mainPage, indentation);
+		this.debug = debug;
 	}
 	
 	//DOM MANIPULATION PUBLIC METHODS
 	
-	public static void addFragment(String fragmentHtml, String fragmentParentId, int fragmentPosition) throws IOException {
+	public void addFragment(String fragmentHtml, String fragmentParentId, int fragmentPosition) throws IOException {
 		
 		Element fragmentTree = getFragmentTreeFromHtml(fragmentHtml);
 		addFragment(fragmentTree, fragmentParentId, fragmentPosition);
 		saveTreeToFile();
 	}
 	
-	public static void removeFragment(String fragmentId) throws IOException {
+	public void removeFragment(String fragmentId) throws IOException {
 		
-		removeFragment(_docTree.getElementById(fragmentId));
+		removeFragment(docTree.getElementById(fragmentId));
 		saveTreeToFile();
 	}
 	
-	public static void moveFragment(String fragmentId, String newParentId, int newFragmentPosition) throws IOException {
+	public void moveFragment(String fragmentId, String newParentId, int newFragmentPosition) throws IOException {
 		
-		moveFragment(_docTree.getElementById(fragmentId), newParentId, newFragmentPosition);
+		moveFragment(docTree.getElementById(fragmentId), newParentId, newFragmentPosition);
 		saveTreeToFile();
 	}
 	
-	public static void updateFragment(String newFragmentHtml, String oldFragmentId) throws IOException {
+	public void updateFragment(String newFragmentHtml, String oldFragmentId) throws IOException {
 		
 		Element newFragmentTree = getFragmentTreeFromHtml(newFragmentHtml);
 		updateFragment(newFragmentTree, oldFragmentId);
@@ -66,7 +66,7 @@ public class PageManipulator {
 	
 	//UTILITIES IN/OUT
 	
-	private static Element getFragmentTreeFromFile(File fragmentInputFile) throws IOException {
+	private Element getFragmentTreeFromFile(File fragmentInputFile) throws IOException {
 		
 		String fragmentHtml = FileUtils.readFileToString(fragmentInputFile, "UTF-8");
 		Element fragmentTree = getFragmentTreeFromHtml(fragmentHtml);
@@ -74,27 +74,27 @@ public class PageManipulator {
 	}
 	
 	//Jsoup automatically wraps a complete html tree around a fragment when parseBodyFragment(), so I had to strip it with this workaround
-	private static Element getFragmentTreeFromHtml(String fragmentHtml) {
+	private Element getFragmentTreeFromHtml(String fragmentHtml) {
 			return Jsoup.parseBodyFragment(fragmentHtml).body().child(0);	//TODO this is just a stub (?)
 	}
 	
-	private static void saveTreeToFile() throws IOException {
-		FileUtils.writeStringToFile(_mainPage, _docTree.html(), "UTF-8"); 
+	private void saveTreeToFile() throws IOException {
+		FileUtils.writeStringToFile(mainPage, docTree.html(), "UTF-8"); 
 	}
 	
 	//DOM MANIPULATION
 	
-	private static void addFragment(Element fragmentTree, String fragmentParentId, int fragmentPosition) throws IOException {
+	private void addFragment(Element fragmentTree, String fragmentParentId, int fragmentPosition) throws IOException {
 		
-		if (_debug) {
+		if (debug) {
 			System.out.println("\n+IN TREE (add)+\n");
-			printNodeRecursive(_docTree);
+			printNodeRecursive(docTree);
 			
 			System.out.println("\n+FRAGMENT TREE (add)+\n");
 			printNodeRecursive(fragmentTree);
 		}
 		
-		Element fragmentParent = _docTree.getElementById(fragmentParentId);
+		Element fragmentParent = docTree.getElementById(fragmentParentId);
 		int siblingsSize = fragmentParent.children().size();
 		if( siblingsSize == 0 || fragmentPosition > siblingsSize-1) {
 			fragmentTree.appendTo(fragmentParent);
@@ -104,66 +104,66 @@ public class PageManipulator {
 			Element fragmentPreviousSibling = fragmentParent.child(fragmentPosition);	
 			fragmentPreviousSibling.before(fragmentTree);
 		}
-		if (_debug) {
+		if (debug) {
 			System.out.println("\n+OUT TREE (add)+\n");
-			printNodeRecursive(_docTree);
+			printNodeRecursive(docTree);
 		}
 	
 	}
 	
-	private static void removeFragment(Element fragmentTreeToRemove) throws IOException {
-		if (_debug) {
+	private void removeFragment(Element fragmentTreeToRemove) throws IOException {
+		if (debug) {
 			System.out.println("\n+IN TREE (remove)+\n");
-			printNodeRecursive(_docTree);
+			printNodeRecursive(docTree);
 		}
 		
 		fragmentTreeToRemove.remove();
-		if (_debug) {
+		if (debug) {
 			System.out.println("\n+OUT TREE (remove)+\n");
-			printNodeRecursive(_docTree);
+			printNodeRecursive(docTree);
 		}
 	}
 	
-	private static void moveFragment(Element fragmentTreeToMove, String newParentId, int newFragmentPosition) throws IOException {
-		if (_debug) {
+	private void moveFragment(Element fragmentTreeToMove, String newParentId, int newFragmentPosition) throws IOException {
+		if (debug) {
 			System.out.println("\n+IN TREE (move)+\n");
-			printNodeRecursive(_docTree);
+			printNodeRecursive(docTree);
 		}
 		
 		removeFragment(fragmentTreeToMove);
 		addFragment(fragmentTreeToMove, newParentId, newFragmentPosition);
 		
-		if (_debug) {
+		if (debug) {
 			System.out.println("\n+OUT TREE (move)+\n");
-			printNodeRecursive(_docTree);
+			printNodeRecursive(docTree);
 		}
 		
 	}
 	
-	private static void updateFragment(Element newFragmentTree, String oldFragmentId) throws IOException {
-		if (_debug) {
+	private void updateFragment(Element newFragmentTree, String oldFragmentId) throws IOException {
+		if (debug) {
 			System.out.println("\n+IN TREE (update)+\n");
-			printNodeRecursive(_docTree);
+			printNodeRecursive(docTree);
 			
 			System.out.println("\n+FRAGMENT TREE (update)+\n");
 			printNodeRecursive(newFragmentTree);
 		}
 		
-		Element oldFragmentTree = _docTree.getElementById(oldFragmentId);
+		Element oldFragmentTree = docTree.getElementById(oldFragmentId);
 		oldFragmentTree.replaceWith(newFragmentTree);
-		if (_debug) {
+		if (debug) {
 			System.out.println("\n+OUT TREE (update)+\n");
-			printNodeRecursive(_docTree);
+			printNodeRecursive(docTree);
 		}
 	}
 	
 	//DEBUGGING UTILITIES
 		
-	private static void printNodeRecursive(Node n) {
+	private void printNodeRecursive(Node n) {
 		printNodeRecursive(n,"");
 	}
 	
-	private static void printNodeRecursive(Node n, String space) {
+	private void printNodeRecursive(Node n, String space) {
 			
 			if (n == null) return;
 			

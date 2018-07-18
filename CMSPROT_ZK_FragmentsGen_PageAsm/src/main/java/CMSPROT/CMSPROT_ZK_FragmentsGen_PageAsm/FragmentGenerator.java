@@ -8,15 +8,19 @@ import javax.servlet.ServletContext;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
+import org.apache.velocity.app.VelocityEngine;
 
 import org.zkoss.zk.ui.WebApps;
 
 public class FragmentGenerator {
 	
-	//SETUP
+	private final VelocityEngine ve;
 	
-	public static void setupFragmentGenerator(String templatesFolderName) throws Exception {
+	//CONSTRUCTOR
+	
+	public FragmentGenerator(String templatesFolderName) throws Exception {
+		
+		ve = new VelocityEngine();
 		
 		//set Velocity web resource loader (that is, where to find the Velocity template files)
 		Properties p = new Properties();
@@ -26,29 +30,29 @@ public class FragmentGenerator {
 	    
 	    //get servlet context and give it to Velocity settings
 	    ServletContext sc = WebApps.getCurrent().getServletContext();	
-		Velocity.setApplicationAttribute("javax.servlet.ServletContext", sc);
+		ve.setApplicationAttribute("javax.servlet.ServletContext", sc);
 	    /* DEBUG 
 	     * System.out.println("SERVLET: " + sc);		
 	     * System.out.println("SERVLET CONTEXT: " + sc.getServletContextName());
          */
 	
 	    //init Velocity
-		Velocity.init(p);
+		ve.init(p);
 	    /* DEBUG 
-	     * System.out.println("PROPERTY \"resource.loader\": "+Velocity.getProperty("resource.loader"));  
-	     * System.out.println("PROPERTY \"webapp.resource.loader.class\": "+Velocity.getProperty("webapp.resource.loader.class"));  
-	     * System.out.println("PROPERTY \"webapp.resource.loader.path\" "+Velocity.getProperty("webapp.resource.loader.path"));  
+	     * System.out.println("PROPERTY \"resource.loader\": "+vc.getProperty("resource.loader"));  
+	     * System.out.println("PROPERTY \"webapp.resource.loader.class\": "+vc.getProperty("webapp.resource.loader.class"));  
+	     * System.out.println("PROPERTY \"webapp.resource.loader.path\" "+vc.getProperty("webapp.resource.loader.path"));  
 	     */
 	}
 	
 	//PAGE GENERATION
 	
-	public static String generateFragmentHtml(FragmentType type, Map<String,String> inputData) throws Exception {
+	public String generateFragmentHtml(FragmentType type, Map<String,String> inputData) throws Exception {
 		
 		String templateFileName = type.toString().toLowerCase() + ".vm";	//example:      type      template
 																			//            FOO_BAR -> foo_bar.vm
 																			//note also that the templates folder was specified before, during Velocity web resource loader setup
-		Template template = Velocity.getTemplate(templateFileName);
+		Template template = ve.getTemplate(templateFileName);
 		
 		VelocityContext context = new VelocityContext();
 		context.put("map", inputData);		//we'll use $map in the .vm file

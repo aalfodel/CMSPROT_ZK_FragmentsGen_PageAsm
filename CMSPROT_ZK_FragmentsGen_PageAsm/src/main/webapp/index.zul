@@ -4,7 +4,7 @@
 		<borderlayout height="500px">
 			<center>
 				<!-- NOTE: leave the id attribute to the iframe component, because it is need for the iframe invalidation by the ViewModel -->
-				<iframe id="ifr" src="mainpage.html" hflex="1" vflex="1"/>
+				<iframe id="ifrInsideZk" src="mainpage.html" hflex="1" vflex="1"/>
 			</center>
 			<west>
 				<vbox>
