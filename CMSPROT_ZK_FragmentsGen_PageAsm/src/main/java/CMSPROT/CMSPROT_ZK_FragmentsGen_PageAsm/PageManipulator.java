@@ -80,6 +80,10 @@ public class PageManipulator {
 	
 	private void saveTreeToFile() throws IOException {
 		FileUtils.writeStringToFile(mainPage, docTree.html(), "UTF-8"); 
+		if (debug) {
+			System.out.println("\nRE-GENERATED PAGE:");
+			System.out.println(mainPage);
+		}
 	}
 	
 	//DOM MANIPULATION

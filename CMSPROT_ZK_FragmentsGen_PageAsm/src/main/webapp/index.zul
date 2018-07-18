@@ -15,7 +15,7 @@
 						</vbox>
 						<vbox>
 							<label value="Parent Id"></label>
-							<textbox value="@bind(vm.parentId)"></textbox>
+							<textbox value="@bind(vm.parentId)" placeholder="page"></textbox>
 						</vbox>
 						<vbox>
 							<label value="Position between siblings"></label>
@@ -23,16 +23,17 @@
 						</vbox>
 					</hbox>
 					<space />
-					<label value="Paragraph Text"></label>
-					<textbox value="@bind(vm.text)"></textbox>
-					<label value="Color"></label>
-					<radiogroup selectedItem="@bind(vm.color)">
-			            <radio label="Red" value="red"/>
-			            <radio label="Blue" value="blue"/>
-			            <radio label="Green" value="green"/>
-		     		</radiogroup>
+					<hbox>
+						<label value="Choose Fragment Type:"></label>
+						<radiogroup selectedItem="@bind(vm.fragmentTypeZul)">
+							<radio label="Paragraph" value="paragraph.zul"/>
+							<radio label="Title" value="title.zul"/>
+						</radiogroup>
+					</hbox>
+					<space />
+					<include src="@bind(vm.fragmentTypeZul)"/>		<!-- NOTE: not using <apply> component because it's not present in ZK CE, but only in ZK EE -->
 		     		<space />
-		     		<button label="Generate Page" onClick="@command('genPage')"/>
+		     		<button label="Add Fragment and Renerate Page" onClick="@command('genPage')"/>
 				</vbox>
 			</west>
 		</borderlayout>

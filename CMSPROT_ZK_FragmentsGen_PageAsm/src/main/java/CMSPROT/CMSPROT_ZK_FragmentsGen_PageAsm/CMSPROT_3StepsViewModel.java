@@ -20,6 +20,9 @@ public class CMSPROT_3StepsViewModel {
 	private String parentId;
 	private int positionBetweenSiblings;
 	
+	private final String zulTemplatesPath = "/WEB-INF/zul_templates/";	
+	private String fragmentTypeZul;
+
 	private String text;
 	private String color;
 	
@@ -42,6 +45,13 @@ public class CMSPROT_3StepsViewModel {
 	}
 	public void setPositionBetweenSiblings(int positionBetweenSiblings) {
 		this.positionBetweenSiblings = positionBetweenSiblings;
+	}
+	
+	public String getFragmentTypeZul() {
+		return fragmentTypeZul;
+	}
+	public void setFragmentTypeZul(String fragmentTypeZul) {
+		this.fragmentTypeZul = zulTemplatesPath + fragmentTypeZul;	//TODO this is just a stub
 	}
 	
 	public String getText() {
@@ -69,12 +79,13 @@ public class CMSPROT_3StepsViewModel {
 	    //initialize PageManipulator
 		String mainPagePath = WebApps.getCurrent().getServletContext().getRealPath("mainpage.html");	//uses ZK to resolve the path to the mainpage
 																										//NOTE the main page file must be inside the root dir of the webapp
-		
-		System.out.println("**DEBUG** ZK mainPagePath: " + mainPagePath); 	/* DEBUG */ 
-		pageManip = new PageManipulator(new File(mainPagePath), true);
+		/* DEBUG 
+		 * System.out.println("**DEBUG** ZK returned mainPagePath: " + mainPagePath); 
+		 */
+		pageManip = new PageManipulator(new File(mainPagePath), true, true);	//the last arg is to activate debug output
 	
 	    //initialize FragmentGenerator
-		String templatesFolderName = "templates";	//NOTE the folder for the templates must be inside WEB-INF
+		String templatesFolderName = "velocity_templates";	//NOTE the folder for the templates must be inside WEB-INF
 		fragmentGen = new FragmentGenerator(templatesFolderName);
 	    
 	}
@@ -85,13 +96,21 @@ public class CMSPROT_3StepsViewModel {
 	public void generatePage() throws Exception {
 
 		//generate fragment code with Velocity
-		String newFragmentHtml = fragmentGen.generateFragmentHtml(FragmentType.PARAGRAPH, fillPassingMap());
+		FragmentType t;
+		if (fragmentTypeZul.equals(zulTemplatesPath + "paragraph.zul"))	//TODO this is a ugly stub
+			t = FragmentType.PARAGRAPH;
+		else if (fragmentTypeZul.equals(zulTemplatesPath + "title.zul"))
+			t = FragmentType.TITLE;
+		else
+			throw new Exception();
+		String newFragmentHtml = fragmentGen.generateFragmentHtml(t, fillPassingMap());
 		
 		//rebuild the mainpage with the new fragment
 		pageManip.addFragment(newFragmentHtml, parentId, positionBetweenSiblings);
 		
 		//invalidate the iframe to force its refreshing
 		ifr.invalidate();
+		
 	}
 	
 	//UTILITIES
