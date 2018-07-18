@@ -1,8 +1,10 @@
 <zk>
-	<window apply="org.zkoss.bind.BindComposer" viewModel="@id('vm')@init('CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm.CMSPROT_3StepsViewModel')" validationMessages="@id('vmsgs')">
+	<!-- NOTE: leave the id attribute to the window component, because it is needed later to get the path to get the iframe component by id -->
+	<window id="mainWindow" apply="org.zkoss.bind.BindComposer" viewModel="@id('vm')@init('CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm.CMSPROT_3StepsViewModel')" validationMessages="@id('vmsgs')">
 		<borderlayout height="500px">
 			<center>
-				<label value="HTML"></label>
+				<!-- NOTE: leave the id attribute to the iframe component, because it is need for the iframe invalidation by the ViewModel -->
+				<iframe id="ifr" src="mainpage.html" hflex="1" vflex="1"/>
 			</center>
 			<west>
 				<vbox>
@@ -16,7 +18,7 @@
 			            <radio label="Blue" value="blue"/>
 			            <radio label="Green" value="green"/>
 		     		</radiogroup>
-		     		<button label="Generate Page" onClick="@command('genPage')" />
+		     		<button label="Generate Page" onClick="@command('genPage')"/>
 				</vbox>
 			</west>
 		</borderlayout>
