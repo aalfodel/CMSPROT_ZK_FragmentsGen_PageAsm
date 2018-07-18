@@ -7,9 +7,22 @@
 				<iframe id="ifrInsideZk" src="mainpage.html" hflex="1" vflex="1"/>
 			</center>
 			<west>
-				<vbox>
-					<label value="Id"></label>
-					<textbox value="@bind(vm.id)"></textbox>
+				<vbox align="stretch">
+					<hbox>
+						<vbox>
+							<label value="Id"></label>
+							<textbox value="@bind(vm.id)"></textbox>
+						</vbox>
+						<vbox>
+							<label value="Parent Id"></label>
+							<textbox value="@bind(vm.parentId)"></textbox>
+						</vbox>
+						<vbox>
+							<label value="Position between siblings"></label>
+							<intbox value="@bind(vm.positionBetweenSiblings)" hflex="1"></intbox>
+						</vbox>
+					</hbox>
+					<space />
 					<label value="Paragraph Text"></label>
 					<textbox value="@bind(vm.text)"></textbox>
 					<label value="Color"></label>
@@ -18,6 +31,7 @@
 			            <radio label="Blue" value="blue"/>
 			            <radio label="Green" value="green"/>
 		     		</radiogroup>
+		     		<space />
 		     		<button label="Generate Page" onClick="@command('genPage')"/>
 				</vbox>
 			</west>

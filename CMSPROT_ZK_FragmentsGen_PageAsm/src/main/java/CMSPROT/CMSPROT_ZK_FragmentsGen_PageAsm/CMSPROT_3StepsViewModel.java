@@ -17,6 +17,9 @@ public class CMSPROT_3StepsViewModel {
 	private FragmentGenerator fragmentGen;
 	
 	private String id;
+	private String parentId;
+	private int positionBetweenSiblings;
+	
 	private String text;
 	private String color;
 	
@@ -28,6 +31,19 @@ public class CMSPROT_3StepsViewModel {
 	public void setId(String id) {
 		this.id = id;
 	}
+	public String getParentId() {
+		return parentId;
+	}
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+	public int getPositionBetweenSiblings() {
+		return positionBetweenSiblings;
+	}
+	public void setPositionBetweenSiblings(int positionBetweenSiblings) {
+		this.positionBetweenSiblings = positionBetweenSiblings;
+	}
+	
 	public String getText() {
 		return text;
 	}
@@ -72,9 +88,7 @@ public class CMSPROT_3StepsViewModel {
 		String newFragmentHtml = fragmentGen.generateFragmentHtml(FragmentType.PARAGRAPH, fillPassingMap());
 		
 		//rebuild the mainpage with the new fragment
-		String parentId = "0";
-		int fragmentPosition = 0;
-		pageManip.addFragment(newFragmentHtml, parentId, fragmentPosition);
+		pageManip.addFragment(newFragmentHtml, parentId, positionBetweenSiblings);
 		
 		//invalidate the iframe to force its refreshing
 		ifr.invalidate();
