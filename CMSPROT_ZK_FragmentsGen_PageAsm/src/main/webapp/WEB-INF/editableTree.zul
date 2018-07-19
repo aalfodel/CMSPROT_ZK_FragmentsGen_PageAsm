@@ -1,0 +1,10 @@
+<!-- imported from Eros -->
+
+<hbox viewModel="@id('editableTreeVm') @init('CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm.EditableTreeViewModel')">
+	<draggableTree model="@load(editableTreeVm.model)" selectedElement="@save(editableTreeVm.selectedElement)"/>
+	<space/>
+	<button iconSclass="z-icon-plus" disabled="@load(empty editableTreeVm.selectedElement)"/>
+	<button iconSclass="z-icon-minus" disabled="@load(empty editableTreeVm.selectedElement or editableTreeVm.selectedElement eq editableTreeVm.root)"/>
+	<button iconSclass="z-icon-gear" disabled="@load(empty editableTreeVm.selectedElement)"/>
+	<include src="@load(editableTreeVm.fragmTypeZul)"/>
+</hbox>

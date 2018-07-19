@@ -1,42 +1,22 @@
 <zk>
 	<!-- NOTE: leave the id attribute to the window component, because it is needed later by the ViewModel to get the path to get the iframe component by id -->
-	<window id="mainWindow" apply="org.zkoss.bind.BindComposer" viewModel="@id('vm')@init('CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm.CMSPROT_3StepsViewModel')" validationMessages="@id('vmsgs')">
-		<borderlayout height="500px">
+	<window id="mainWindow"
+			apply="org.zkoss.bind.BindComposer"
+			viewModel="@id('vm') @init('CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm.CMSPROT_3StepsViewModel')"
+			validationMessages="@id('vmsgs')"
+			height="100%"
+			style="padding: 0;">		
+		<borderlayout>
+			<north border="0">
+				<label value="Welcome to this simple Html Page Generator"/>
+			</north>
+			<west size="25%">
+				<include src="/WEB-INF/editableTree.zul"/>
+			</west>
 			<center>
 				<!-- NOTE: leave the id attribute to the iframe component, because it is need for the iframe invalidation by the ViewModel -->
 				<iframe id="ifrInsideZk" src="mainpage.html" hflex="1" vflex="1"/>
 			</center>
-			<west>
-				<vbox align="stretch">
-					<hbox>
-						<vbox>
-							<label value="Id"></label>
-							<textbox value="@bind(vm.id)"></textbox>
-						</vbox>
-						<vbox>
-							<label value="Parent Id"></label>
-							<textbox value="@bind(vm.parentId)" placeholder="page"></textbox>
-						</vbox>
-						<vbox>
-							<label value="Position between siblings"></label>
-							<intbox value="@bind(vm.positionBetweenSiblings)" hflex="1"></intbox>
-						</vbox>
-					</hbox>
-					<space />
-					<hbox>
-						<label value="Choose Fragment Type:"></label>
-						<radiogroup selectedItem="@bind(vm.fragmType)">
-							<radio label="Paragraph" value="paragraph"/>
-							<radio label="Title" value="title"/>
-						</radiogroup>
-					</hbox>
-					<space />
-					<include src="@load(vm.fragmTypeZul)"/>		<!-- NOTE: I'm not using <apply> component because it's not present in ZK CE, but only in ZK EE -->
-																<!-- also, zul templates must be in /WEB-INF/zul_templates dir and their name must be *all* lowercase -->
-		     		<space />
-		     		<button label="Add Fragment and Renerate Page" onClick="@command('genPage')"/>
-				</vbox>
-			</west>
 		</borderlayout>
 	</window>
 </zk>

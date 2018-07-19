@@ -20,8 +20,6 @@ public class CMSPROT_3StepsViewModel {
 	private String id;
 	private String parentId;
 	private int positionBetweenSiblings;
-	
-	private FragmentType fragmType;
 
 	private String text;
 	private String color;
@@ -47,46 +45,18 @@ public class CMSPROT_3StepsViewModel {
 		this.positionBetweenSiblings = positionBetweenSiblings;
 	}
 	
-	//NOTE: Enum<->String conversions
-	public String getFragmType() {
-		String s;
-		if(fragmType == null)	//to manage startup state, when fragmtType hasn't yet got a @save
-			s = "";		
-		else
-			s = fragmType.toString().toLowerCase();		
-		//System.out.println("**DEBUG** fragmType to lowercase string: " + s);
-		return s;
-	}
-	@NotifyChange("fragmTypeZul")
-	public void setFragmType(String fragmType) {
-		this.fragmType = FragmentType.valueOf(fragmType.toUpperCase());
-		//System.out.println("**DEBUG** fragmType: " + this.fragmType);
-	}
-	
-	//variable for Enum -> .zul conversation (ex. FragmentType.PARAGRAPH -> /WEB-INF/zul_templates/paragraph.zul)
-	//NOTE: zul templates must be in /WEB-INF/zul_templates dir and their name must be *all* lowercase
-	//TODO: manage to remove the "all lowercase" restriction for zul template files
-	public String getFragmTypeZul() { 
-		String s;
-		if(fragmType == null)	//to manage startup state, when fragmtType hasn't yet got a @load
-			s = "";
-		else
-			s = "/WEB-INF/zul_templates/" + getFragmType() + ".zul";
-		return s;
-	}
-	
-	public String getText() {
-		return text;
-	}
-	public void setText(String text) {
-		this.text = text;
-	}
-	public String getColor() {
-		return color;
-	}
-	public void setColor(String color) {
-		this.color = color;
-	}
+//	public String getText() {
+//		return text;
+//	}
+//	public void setText(String text) {
+//		this.text = text;
+//	}
+//	public String getColor() {
+//		return color;
+//	}
+//	public void setColor(String color) {
+//		this.color = color;
+//	}
 	
 	//STARTUP
 	
@@ -113,19 +83,19 @@ public class CMSPROT_3StepsViewModel {
 		
 	//PAGE GENERATION
 
-	@Command("genPage")
-	public void generatePage() throws Exception {
-
-		//generate fragment code with Velocity
-		String newFragmentHtml = fragmentGen.generateFragmentHtml(fragmType, fillPassingMap());
-		
-		//rebuild the mainpage with the new fragment
-		pageManip.addFragment(newFragmentHtml, parentId, positionBetweenSiblings);
-		
-		//invalidate the iframe to force its refreshing
-		ifr.invalidate();
-		
-	}
+//	@Command("genPage")
+//	public void generatePage() throws Exception {
+//
+//		//generate fragment code with Velocity
+//		String newFragmentHtml = fragmentGen.generateFragmentHtml(fragmType, fillPassingMap());
+//		
+//		//rebuild the mainpage with the new fragment
+//		pageManip.addFragment(newFragmentHtml, parentId, positionBetweenSiblings);
+//		
+//		//invalidate the iframe to force its refreshing
+//		ifr.invalidate();
+//		
+//	}
 	
 	//UTILITIES
 	

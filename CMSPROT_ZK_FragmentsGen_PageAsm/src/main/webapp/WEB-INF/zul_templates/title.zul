@@ -1,9 +1,17 @@
-<vbox>	<!-- NOTE: a wrapper component like this one is mandatory (you can also simply use <zk>) -->
-	<label value="A Title Text"></label>
-	<textbox value="@bind(vm.text)"></textbox>	<!-- NOTE: the included zul inherit the father ViewModel -->
+<window id="titlePopup"
+		title="Add Title"
+		viewModel="@id('editableTreeVm') @init('CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm.EditableTreeViewModel')"
+		width="50%"
+		contentStyle="overflow:auto;"
+		mode="modal"
+		visible="@load(vm.addPopupVisibility)"
+		onCancel="@command('resetPopUpSelectionAndBack')"
+	<label value="Title Text"></label>
+	<textbox value="@bind(vm.text)"></textbox>	<!-- NOTE: the included zul inherits the father ViewModel -->
 	<label value="Color"></label>
 	<radiogroup selectedItem="@bind(vm.color)">
-		<radio label="Orange" value="Orange"/>
-		<radio label="Gray" value="LightGray"/>
+		<radio label="Red" value="red"/>
+		<radio label="Blue" value="blue"/>
+		<radio label="Green" value="green"/>
 	</radiogroup>
-</vbox>
+</window>
