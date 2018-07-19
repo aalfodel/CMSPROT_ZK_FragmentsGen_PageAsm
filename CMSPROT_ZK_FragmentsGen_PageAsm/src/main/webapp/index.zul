@@ -2,7 +2,7 @@
 	<!-- NOTE: leave the id attribute to the window component, because it is needed later by the ViewModel to get the path to get the iframe component by id -->
 	<window id="mainWindow"
 			apply="org.zkoss.bind.BindComposer"
-			viewModel="@id('vm') @init('CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm.CMSPROT_3StepsViewModel')"
+			viewModel="@id('vm') @init('CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm.IndexVM')"
 			validationMessages="@id('vmsgs')"
 			height="100%"
 			style="padding: 0;">		

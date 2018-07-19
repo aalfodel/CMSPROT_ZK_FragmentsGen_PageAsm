@@ -11,18 +11,19 @@ import org.zkoss.zk.ui.Path;
 import org.zkoss.zk.ui.WebApps;
 import org.zkoss.zul.Iframe;
 
-public class CMSPROT_3StepsViewModel {
+public class IndexVM {
 	
 	private Iframe ifr;	//our mainpage on the right side
 	private PageManipulator pageManip;
 	private FragmentGenerator fragmentGen;
 	
-	private String id;
-	private String parentId;
-	private int positionBetweenSiblings;
+	//TODO
+	private String id = "1";
+	private String parentId = "page";
+	private int positionBetweenSiblings = 0;
 
-	private String text;
-	private String color;
+//	private String text;
+//	private String color;
 	
 	//GETTERS SETTERS
 	
@@ -99,15 +100,15 @@ public class CMSPROT_3StepsViewModel {
 	
 	//UTILITIES
 	
-	//TODO this is just a stub
-	private Map<String, String> fillPassingMap() {
-		Map<String, String> dataPassing = new HashMap<String, String>();
-		
-		dataPassing.put("id", id);
-		dataPassing.put("text", text);
-		dataPassing.put("color", color);
-		
-		return dataPassing;
-	}
+//	//TODO this is just a stub
+//	private Map<String, String> fillPassingMap() {
+//		Map<String, String> dataPassing = new HashMap<String, String>();
+//		
+//		dataPassing.put("id", id);
+//		dataPassing.put("text", text);
+//		dataPassing.put("color", color);
+//		
+//		return dataPassing;
+//	}
 	
 }

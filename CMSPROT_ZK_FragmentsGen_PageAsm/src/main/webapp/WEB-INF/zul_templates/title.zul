@@ -1,17 +1,32 @@
 <window id="titlePopup"
-		title="Add Title"
-		viewModel="@id('editableTreeVm') @init('CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm.EditableTreeViewModel')"
+		title="title popup"
+		viewModel="@id('titleVm') @init('CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm.TitleVM')"
 		width="50%"
 		contentStyle="overflow:auto;"
 		mode="modal"
+		closable="true"
+		>
+		<!-- 
 		visible="@load(vm.addPopupVisibility)"
-		onCancel="@command('resetPopUpSelectionAndBack')"
-	<label value="Title Text"></label>
-	<textbox value="@bind(vm.text)"></textbox>	<!-- NOTE: the included zul inherits the father ViewModel -->
+		onCancel="@command('resetPopUpSelectionAndBack')" 
+		-->
+	<vbox>
+		<label value="Title"/>
+		<textbox value="@bind(titleVm.text)"/>
+		<hbox>
+			<button label="Exit" onClick="@command('exitPopup')"/>
+			<button label="Save" onClick="@command('saveToTree') "/>
+			<!-- <button label="Save" onClick="@global-command('saveToTreeGlobal', sparam='passed') "/>  -->
+		</hbox>
+	</vbox>
+</window>
+
+	<!-- 
+	<textbox value="@bind(vm.text)"></textbox>	 NOTE: the included zul inherits the father ViewModel 
 	<label value="Color"></label>
 	<radiogroup selectedItem="@bind(vm.color)">
 		<radio label="Red" value="red"/>
 		<radio label="Blue" value="blue"/>
 		<radio label="Green" value="green"/>
 	</radiogroup>
-</window>
+	 -->

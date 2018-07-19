@@ -11,49 +11,62 @@ import java.util.Map;
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.NotifyChange;
 
 import biz.opengate.zkComponents.draggableTree.DraggableTreeModel;
 
-public class EditableTreeViewModel {
+public class EditableTreeVM {
 	
-	private FragmentType fragmType;
+	private String popup;
 	
-	//NOTE: Enum<->String conversions
-	public String getFragmType() {
-		String s;
-		if(fragmType == null)	//to manage startup state, when fragmtType hasn't yet got a @save
-			s = "";		
-		else
-			s = fragmType.toString().toLowerCase();		
-		//System.out.println("**DEBUG** fragmType to lowercase string: " + s);
-		return s;
-	}
-	@NotifyChange("fragmTypeZul")
-	public void setFragmType(String fragmType) {
-		this.fragmType = FragmentType.valueOf(fragmType.toUpperCase());
-		//System.out.println("**DEBUG** fragmType: " + this.fragmType);
-	}
-	
-	//variable for Enum -> .zul conversation (ex. FragmentType.PARAGRAPH -> /WEB-INF/zul_templates/paragraph.zul)
-	//NOTE: zul templates must be in /WEB-INF/zul_templates dir and their name must be *all* lowercase
-	//TODO: manage to remove the "all lowercase" restriction for zul template files
-	public String getFragmTypeZul() { 
-		String s;
-		if(fragmType == null)	//to manage startup state, when fragmtType hasn't yet got a @load
-			s = "";
-		else
-			s = "/WEB-INF/zul_templates/" + getFragmType() + ".zul";
-		return s;
+	public String getPopup() {
+		return popup;
 	}
 
-	private DraggableTreeCmsElement root;
+	public void setPopup(String popup) {
+		this.popup = popup;
+	}
+	
+//	private FragmentType fragmType;
+//	
+//	//NOTE: Enum<->String conversions
+//	public String getFragmType() {
+//		String s;
+//		if(fragmType == null)	//to manage startup state, when fragmtType hasn't yet got a @save
+//			s = "";		
+//		else
+//			s = fragmType.toString().toLowerCase();		
+//		//System.out.println("**DEBUG** fragmType to lowercase string: " + s);
+//		return s;
+//	}
+//	@NotifyChange("fragmTypeZul")
+//	public void setFragmType(String fragmType) {
+//		this.fragmType = FragmentType.valueOf(fragmType.toUpperCase());
+//		//System.out.println("**DEBUG** fragmType: " + this.fragmType);
+//	}
+//	
+//	//variable for Enum -> .zul conversation (ex. FragmentType.PARAGRAPH -> /WEB-INF/zul_templates/paragraph.zul)
+//	//NOTE: zul templates must be in /WEB-INF/zul_templates dir and their name must be *all* lowercase
+//	//TODO: manage to remove the "all lowercase" restriction for zul template files
+//	public String getFragmTypeZul() { 
+//		String s;
+//		if(fragmType == null)	//to manage startup state, when fragmtType hasn't yet got a @load
+//			s = "";
+//		else
+//			s = "/WEB-INF/zul_templates/" + getFragmType() + ".zul";
+//		return s;
+//	}
+
+
+	//TODO
+	private DraggableTreeCmsElement root = new DraggableTreeCmsElement(null, "root", FragmentType.TITLE, new HashMap<String, String>());
 	private DraggableTreeModel model;
 	private DraggableTreeCmsElement selectedElement;
 	
 //	private FileWriter out;
 //	private FragmentType selectedFragment;
-	private Map<String,String> attributeDataMap;
+//	private Map<String,String> attributeDataMap;
 //	
 //	private ArrayList<String> idList = new ArrayList<String>();
 //
@@ -61,18 +74,18 @@ public class EditableTreeViewModel {
 //	
 //	private List<FragmentType> fragmentList;
 //	
-	private boolean addPopupVisibility= false;
-	private boolean modifyPopupVisibility= false;
+//	private boolean addPopupVisibility= false;
+//	private boolean modifyPopupVisibility= false;
 	
-	//TODO review this
-	@AfterCompose
-	public void doAfterCompose() {
-		//init the root element
-		attributeDataMap = new HashMap<String,String>();
-		Map<String, String> rootMap = new HashMap<String, String>();
-		rootMap.put("id", "root");
-		root = new DraggableTreeCmsElement(null, "root", FragmentType.TITLE, rootMap);
-	}
+//	//TODO review this
+//	@AfterCompose
+//	public void doAfterCompose() {
+//		//init the root element
+//		//attributeDataMap = new HashMap<String,String>();
+//		Map<String, String> rootMap = new HashMap<String, String>();
+//		rootMap.put("id", "root");
+//		root = new DraggableTreeCmsElement(null, "root", FragmentType.TITLE, rootMap);
+//	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////GETTERS AND SETTERS
@@ -137,21 +150,21 @@ public class EditableTreeViewModel {
 //		this.attributeDataMap = attributeDataMap;
 //	}
 	
-	public boolean isModifyPopupVisibility() {
-		return modifyPopupVisibility;
-	}
-
-	public void setModifyPopupVisibility(boolean modifyPopupVisibility) {
-		this.modifyPopupVisibility = modifyPopupVisibility;
-	}
-	
-	public boolean isAddPopupVisibility() {
-		return addPopupVisibility;
-	}
-
-	public void setAddPopupVisibility(boolean addPopupVisibility) {
-		this.addPopupVisibility = addPopupVisibility;
-	}
+//	public boolean isModifyPopupVisibility() {
+//		return modifyPopupVisibility;
+//	}
+//
+//	public void setModifyPopupVisibility(boolean modifyPopupVisibility) {
+//		this.modifyPopupVisibility = modifyPopupVisibility;
+//	}
+//	
+//	public boolean isAddPopupVisibility() {
+//		return addPopupVisibility;
+//	}
+//
+//	public void setAddPopupVisibility(boolean addPopupVisibility) {
+//		this.addPopupVisibility = addPopupVisibility;
+//	}
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////COMMANDS		
 //	@Command
@@ -168,12 +181,38 @@ public class EditableTreeViewModel {
 //		attributeDataMap.put("colorAttribute", color);
 //	}
 	
+	//@Command("openPopup")
 	@Command
 	@NotifyChange("*")
-	public void addComponent() throws Exception{
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////
-		////// CHECK DATA
-		String errString=null;
+	public void openPopup() {
+		setPopup("/WEB-INF/zul_templates/title.zul");
+		//setFragmType(selectedElement.getFragmentTypeDef().toString());
+	}
+	
+	//TODO
+//	@GlobalCommand("saveToTreeGlobal")
+//	public void saveToTreeGlobal(@BindingParam("sparam") String a) {
+//		System.out.println(" RECEIVED: " + a);
+//	}
+	@GlobalCommand
+	public void saveToTreeGlobal(@BindingParam("pipeHashMap") Map<String, Object> pipeHashMap) {
+		System.out.println("pipeHM RECEIVED: " + pipeHashMap);
+//		FragmentType t = FragmentType.TITLE;
+//		Map<String,String> newMap =new HashMap<String,String>();
+//
+//		for (Map.Entry<String, Object> entry : pipeHashMap.entrySet()) {
+//		       if(entry.getValue() instanceof String){
+//		            newMap.put(entry.getKey(), (String) entry.getValue());
+//		          }
+//		 }
+//		new DraggableTreeCmsElement(root, "new", t, newMap);
+	}
+	
+//	@NotifyChange("*")
+//	public void addComponent() throws Exception{
+//		///////////////////////////////////////////////////////////////////////////////////////////////////////////
+//		////// CHECK DATA
+//		String errString=null;
 		
 //		System.out.println( fragmentMap.get(selectedFragment));
 //		System.out.println( fragmentMap.get(selectedFragment).toString());
@@ -202,7 +241,7 @@ public class EditableTreeViewModel {
 //			addPopupVisibility=true;
 //			Clients.showNotification(errString);	
 //		}
-	}
+//	}
 	
 //    @Command
 //    @NotifyChange("attributeDataMap")
