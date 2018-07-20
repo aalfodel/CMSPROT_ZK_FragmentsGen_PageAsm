@@ -5,10 +5,9 @@
 	<draggableTree model="@load(editableTreeVm.model)" selectedElement="@save(editableTreeVm.selectedElement)"/>
 	<space/>
 	<button iconSclass="z-icon-plus" disabled="@load(empty editableTreeVm.selectedElement)" onClick="@command('openPopup')"/>
-	<include src="@load(editableTreeVm.popup)"/>
 </hbox>
 
-	<!-- 
-	<button iconSclass="z-icon-minus" disabled="@load(empty editableTreeVm.selectedElement or editableTreeVm.selectedElement eq editableTreeVm.root)"/>
-	<button iconSclass="z-icon-gear" disabled="@load(empty editableTreeVm.selectedElement)"/>
-	 -->
+<!-- TODO
+<button iconSclass="z-icon-minus" disabled="@load(empty editableTreeVm.selectedElement or editableTreeVm.selectedElement eq editableTreeVm.root)"/>
+<button iconSclass="z-icon-gear" disabled="@load(empty editableTreeVm.selectedElement)"/>
+ -->

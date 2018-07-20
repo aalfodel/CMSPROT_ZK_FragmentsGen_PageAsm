@@ -13,20 +13,11 @@ import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.zk.ui.Executions;
 
 import biz.opengate.zkComponents.draggableTree.DraggableTreeModel;
 
 public class EditableTreeVM {
-	
-	private String popup;
-	
-	public String getPopup() {
-		return popup;
-	}
-
-	public void setPopup(String popup) {
-		this.popup = popup;
-	}
 	
 //	private FragmentType fragmType;
 //	
@@ -181,31 +172,21 @@ public class EditableTreeVM {
 //		attributeDataMap.put("colorAttribute", color);
 //	}
 	
-	//@Command("openPopup")
 	@Command
-	@NotifyChange("*")
 	public void openPopup() {
-		setPopup("/WEB-INF/zul_templates/title.zul");
+		
 		//setFragmType(selectedElement.getFragmentTypeDef().toString());
+		
+		//create new component and attach it to DOM
+		Executions.createComponents("/WEB-INF/zul_templates/title.zul", null,null);		//TODO remove hardcoded path
 	}
 	
 	//TODO
-//	@GlobalCommand("saveToTreeGlobal")
-//	public void saveToTreeGlobal(@BindingParam("sparam") String a) {
-//		System.out.println(" RECEIVED: " + a);
-//	}
 	@GlobalCommand
-	public void saveToTreeGlobal(@BindingParam("pipeHashMap") Map<String, Object> pipeHashMap) {
-		System.out.println("pipeHM RECEIVED: " + pipeHashMap);
-//		FragmentType t = FragmentType.TITLE;
-//		Map<String,String> newMap =new HashMap<String,String>();
-//
-//		for (Map.Entry<String, Object> entry : pipeHashMap.entrySet()) {
-//		       if(entry.getValue() instanceof String){
-//		            newMap.put(entry.getKey(), (String) entry.getValue());
-//		          }
-//		 }
-//		new DraggableTreeCmsElement(root, "new", t, newMap);
+	@NotifyChange("model")
+	public void saveToTreeGlobal(@BindingParam("pipeVariable") Map<String, String> pipeHashMap) {
+		System.out.println("**DEBUG** pipeHashMap RECEIVED: " + pipeHashMap);
+		new DraggableTreeCmsElement(selectedElement, pipeHashMap.get("id"), FragmentType.valueOf(pipeHashMap.get("fragmentType")), pipeHashMap);
 	}
 	
 //	@NotifyChange("*")
