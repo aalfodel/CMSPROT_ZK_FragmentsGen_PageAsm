@@ -1,13 +1,35 @@
-<!-- imported from Eros -->
-
-<hbox id="editableTree"
-	  viewModel="@id('editableTreeVm') @init('CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm.EditableTreeVM')">
+<hbox id="editableTree" viewModel="@id('editableTreeVm') @init('CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm.EditableTreeVM')">
 	<draggableTree model="@load(editableTreeVm.model)" selectedElement="@save(editableTreeVm.selectedElement)"/>
 	<space/>
+	<!-- TODO
+		<button iconSclass="z-icon-minus" disabled="@load(empty editableTreeVm.selectedElement or editableTreeVm.selectedElement eq editableTreeVm.root)"/>
+		<button iconSclass="z-icon-gear" disabled="@load(empty editableTreeVm.selectedElement)"/>
+	 -->
 	<button iconSclass="z-icon-plus" disabled="@load(empty editableTreeVm.selectedElement)" onClick="@command('openPopup')"/>
+	<window id="popupWindow"
+	    	title="Add/Edit Popup"
+	    	mode="modal" 
+		    width="60%"
+	    	height="70%"
+	    	contentStyle="overflow:auto;"
+	 		style="padding: 0;"
+			visible="@bind(editableTreeVm.popupVisibility)">
+		
+		<!-- TODO
+			<listbox if="${param.readonly == 'true'}"  
+			<label unless="${param.readonly == 'true'}" value=""/>
+		-->
+		<hlayout>
+			<listbox model="@load(editableTreeVm.fragmentTypeList)" 
+					 selectedItem="@bind(editableTreeVm.selectedFragmentType)"
+				  	 width="100%"
+				  	 rows="1"
+				  	 mold="select"/>
+			<button label="close" onClick="@command('closePopup')"/>
+		</hlayout>
+		<space/>
+		<include src="@load(editableTreeVm.fragmTypeZul)"/>
+	</window>
 </hbox>
 
-<!-- TODO
-<button iconSclass="z-icon-minus" disabled="@load(empty editableTreeVm.selectedElement or editableTreeVm.selectedElement eq editableTreeVm.root)"/>
-<button iconSclass="z-icon-gear" disabled="@load(empty editableTreeVm.selectedElement)"/>
- -->
+

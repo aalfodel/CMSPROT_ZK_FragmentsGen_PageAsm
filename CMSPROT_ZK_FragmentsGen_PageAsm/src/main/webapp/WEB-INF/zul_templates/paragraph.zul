@@ -1,10 +1,22 @@
-<vbox>	<!-- NOTE: a wrapper component like this one is mandatory (you can also simply use <zk>) -->
-	<label value="Paragraph Text"></label>
-	<textbox value="@bind(vm.text)"></textbox>	<!-- NOTE: the included zul inherits the father ViewModel -->
-	<label value="Color"></label>
-	<radiogroup selectedItem="@bind(vm.color)">
-		<radio label="Red" value="red"/>
-		<radio label="Blue" value="blue"/>
-		<radio label="Green" value="green"/>
-	</radiogroup>
-</vbox>
+<hlayout id="paragraphEdit" viewModel="@id('paragraphVm') @init('CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm.ParagraphVM')"> <!-- NOTE: a wrapper component like this one is mandatory (you can also simply use <zk>) -->
+	<vbox>
+		<hbox>
+			<label value="Id: " style="color: red;"/>
+			<textbox value="@bind(paragraphVm.pipeHashMap['id'])"/>
+		</hbox>
+		<space />
+		<label value="Color: "></label>
+		<radiogroup selectedItem="@bind(paragraphVm.pipeHashMap['color'])">
+			<radio label="Orange" value="red"/>
+			<radio label="Blue" value="orange"/>
+		</radiogroup>
+		<hbox>
+			<label value="Paragraph: "/>
+			<textbox value="@bind(paragraphVm.pipeHashMap['text'])"/>
+		</hbox>
+		<space />
+		<hbox>
+			<button label="Save" onClick="@global-command('saveToTreeGlobal', pipeMap=paragraphVm.pipeHashMap)"/> 
+		</hbox>
+	</vbox>
+</hlayout>

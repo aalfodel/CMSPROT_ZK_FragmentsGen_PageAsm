@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.zkoss.bind.annotation.AfterCompose;
+import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Path;
 import org.zkoss.zk.ui.WebApps;
@@ -17,59 +19,17 @@ public class IndexVM {
 	private PageManipulator pageManip;
 	private FragmentGenerator fragmentGen;
 	
-	//TODO
-	private String id = "1";
-	private String parentId = "page";
-	private int positionBetweenSiblings = 0;
-
-//	private String text;
-//	private String color;
-	
-	//GETTERS SETTERS
-	
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getParentId() {
-		return parentId;
-	}
-	public void setParentId(String parentId) {
-		this.parentId = parentId;
-	}
-	public int getPositionBetweenSiblings() {
-		return positionBetweenSiblings;
-	}
-	public void setPositionBetweenSiblings(int positionBetweenSiblings) {
-		this.positionBetweenSiblings = positionBetweenSiblings;
-	}
-	
-//	public String getText() {
-//		return text;
-//	}
-//	public void setText(String text) {
-//		this.text = text;
-//	}
-//	public String getColor() {
-//		return color;
-//	}
-//	public void setColor(String color) {
-//		this.color = color;
-//	}
-	
 	//STARTUP
 	
 	@AfterCompose
 	public void startup() throws Exception {
 		
 		//get the iframe component by id
-	    ifr = (Iframe)Path.getComponent("/mainWindow/ifrInsideZk");		//NOTE: https://www.zkoss.org/wiki/ZK_Developer%27s_Guide/ZK_in_Depth/Component_Path_and_Accesibility/Access_UI_Component
+	    ifr = (Iframe)Path.getComponent("/indexWindow/ifrInsideZk");		//NOTE: https://www.zkoss.org/wiki/ZK_Developer%27s_Guide/ZK_in_Depth/Component_Path_and_Accesibility/Access_UI_Component
 																		//also, remember that if you move the iframe in another position, you'll have to change the path here as well! 
 	    
 	    //initialize PageManipulator
-		String mainPagePath = WebApps.getCurrent().getServletContext().getRealPath("mainpage.html");	//uses ZK to resolve the path to the mainpage
+		String mainPagePath = WebApps.getCurrent().getServletContext().getRealPath("generated-page.html");	//uses ZK to resolve the path to the mainpage
 																										//NOTE the main page file must be inside the root dir of the webapp
 		/* DEBUG 
 		 * System.out.println("**DEBUG** ZK returned mainPagePath: " + mainPagePath); 
@@ -82,33 +42,20 @@ public class IndexVM {
 	    
 	}
 		
-	//PAGE GENERATION
+//	//PAGE GENERATION
+	
+	@GlobalCommand("saveToTreeGlobal")
+	public void generatePage(@BindingParam("pipeMap") Map<String, String> pipeHashMap) throws Exception {
 
-//	@Command("genPage")
-//	public void generatePage() throws Exception {
-//
-//		//generate fragment code with Velocity
-//		String newFragmentHtml = fragmentGen.generateFragmentHtml(fragmType, fillPassingMap());
-//		
-//		//rebuild the mainpage with the new fragment
-//		pageManip.addFragment(newFragmentHtml, parentId, positionBetweenSiblings);
-//		
-//		//invalidate the iframe to force its refreshing
-//		ifr.invalidate();
-//		
-//	}
-	
-	//UTILITIES
-	
-//	//TODO this is just a stub
-//	private Map<String, String> fillPassingMap() {
-//		Map<String, String> dataPassing = new HashMap<String, String>();
-//		
-//		dataPassing.put("id", id);
-//		dataPassing.put("text", text);
-//		dataPassing.put("color", color);
-//		
-//		return dataPassing;
-//	}
-	
+		//generate fragment code with Velocity
+		String newFragmentHtml = fragmentGen.generateFragmentHtml(FragmentType.valueOf(pipeHashMap.get("fragmentType")), pipeHashMap);
+		
+		//rebuild the mainpage with the new fragment
+		pageManip.addFragment(newFragmentHtml, "generated-page-root", 0);	//TODO bogus values here
+																			//THIS IS THE ONLY OBSTACLE TO COMPLETE THE (INITIAL) BACKEND-FRONTEND MERGE!
+		
+		//invalidate the iframe to force its refreshing
+		ifr.invalidate();
+		
+	}	
 }

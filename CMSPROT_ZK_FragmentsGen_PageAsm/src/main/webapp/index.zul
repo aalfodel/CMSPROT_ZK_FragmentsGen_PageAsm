@@ -1,9 +1,9 @@
 <zk>
 	<!-- NOTE: leave the id attribute to the window component, because it is needed later by the ViewModel to get the path to get the iframe component by id -->
-	<window id="mainWindow"
+	<window id="indexWindow"
 			apply="org.zkoss.bind.BindComposer"
-			viewModel="@id('vm') @init('CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm.IndexVM')"
-			validationMessages="@id('vmsgs')"
+			viewModel="@id('IndexVm') @init('CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm.IndexVM')"
+			validationMessages="@id('indexVmSgs')"
 			height="100%"
 			style="padding: 0;">		
 		<borderlayout>
@@ -15,7 +15,7 @@
 			</west>
 			<center>
 				<!-- NOTE: leave the id attribute to the iframe component, because it is need for the iframe invalidation by the ViewModel -->
-				<iframe id="ifrInsideZk" src="mainpage.html" hflex="1" vflex="1"/>
+				<iframe id="ifrInsideZk" src="generated-page.html" hflex="1" vflex="1"/>
 			</center>
 		</borderlayout>
 	</window>
