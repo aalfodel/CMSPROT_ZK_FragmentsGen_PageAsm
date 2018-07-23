@@ -11,7 +11,8 @@ import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.zul.Window;
 
 public class TitleVM {
-	private Map<String, String> pipeHashMap = new HashMap<String, String>();
+	private Map<String, String> pipeHashMap = new HashMap<String, String>();	//WARNING the same pipeHashMap is reused at every passage! 
+																				//I solved this problem in the draggableTree element creation: the pipeHashMap gets cloned
 	
 	public Map<String, String> getPipeHashMap() {
 		return pipeHashMap;
