@@ -11,11 +11,12 @@ import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Path;
 import org.zkoss.zk.ui.WebApps;
+import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Iframe;
 
 public class IndexVM {
 	
-	private Iframe ifr;	//our mainpage on the right side
+	//private Iframe ifr;	//our mainpage on the right side
 	private PageManipulator pageManip;
 	private FragmentGenerator fragmentGen;
 	
@@ -25,7 +26,7 @@ public class IndexVM {
 	public void startup() throws Exception {
 		
 		//get the iframe component by id
-	    ifr = (Iframe)Path.getComponent("/indexWindow/ifrInsideZk");		//NOTE: https://www.zkoss.org/wiki/ZK_Developer%27s_Guide/ZK_in_Depth/Component_Path_and_Accesibility/Access_UI_Component
+	    //ifr = (Iframe)Path.getComponent("/indexWindow/ifrInsideZk");		//NOTE: https://www.zkoss.org/wiki/ZK_Developer%27s_Guide/ZK_in_Depth/Component_Path_and_Accesibility/Access_UI_Component
 																		//also, remember that if you move the iframe in another position, you'll have to change the path here as well! 
 	    
 	    //initialize PageManipulator
@@ -42,20 +43,22 @@ public class IndexVM {
 	    
 	}
 		
-//	//PAGE GENERATION
+	//PAGE GENERATION
 	
-	@GlobalCommand("saveToTreeGlobal")
-	public void generatePage(@BindingParam("pipeMap") Map<String, String> pipeHashMap) throws Exception {
+	@GlobalCommand("genPageGlobal")
+	public void generatePage(@BindingParam("pipeHashMap") Map<String, String> pipeHashMap) throws Exception {
+		System.out.println("**DEBUG** RECEIVED MAP: " + pipeHashMap);
 
 		//generate fragment code with Velocity
 		String newFragmentHtml = fragmentGen.generateFragmentHtml(FragmentType.valueOf(pipeHashMap.get("fragmentType")), pipeHashMap);
 		
 		//rebuild the mainpage with the new fragment
-		pageManip.addFragment(newFragmentHtml, "generated-page-root", 0);	//TODO bogus values here
-																			//THIS IS THE ONLY OBSTACLE TO COMPLETE THE (INITIAL) BACKEND-FRONTEND MERGE!
+		pageManip.addFragment(newFragmentHtml, pipeHashMap.get("parentId"), Integer.parseInt(pipeHashMap.get("siblingsPosition")));	//TODO
+																			
 		
-		//invalidate the iframe to force its refreshing
-		ifr.invalidate();
+		//force iframe refresh
+		//ifr.invalidate();
+		Clients.evalJavaScript("document.getElementsByTagName(\"iframe\")[0].contentWindow.location.reload(true);");	//https://stackoverflow.com/questions/13477451/can-i-force-a-hard-refresh-on-an-iframe-with-javascript?lq=1
 		
 	}	
 }

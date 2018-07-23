@@ -3,6 +3,7 @@ package CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
@@ -23,6 +24,13 @@ public class TitleVM {
 	@AfterCompose
 	public void initFragmentType() {
 		pipeHashMap.put("fragmentType", "TITLE");
+	}
+	
+	@Command
+	public void saveToTree() {
+		Map<String, Object> wrapperMap = new HashMap<String, Object>();
+		wrapperMap.put("pipeHashMap", pipeHashMap);
+		BindUtils.postGlobalCommand(null, null, "saveToTreeGlobal", wrapperMap);
 	}
 	
 	//detatches the window from the DOM

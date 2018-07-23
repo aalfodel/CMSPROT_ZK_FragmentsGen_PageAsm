@@ -3,9 +3,11 @@
 package CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.GlobalCommand;
@@ -133,13 +135,18 @@ public class EditableTreeVM {
 		//create new component and attach it to DOM
 		//Executions.createComponents("/WEB-INF/zul_templates/title.zul", null,null);		//TODO remove hardcoded path
 	}
-	
+
 	//TODO
 	@GlobalCommand
 	@NotifyChange("model")
-	public void saveToTreeGlobal(@BindingParam("pipeMap") Map<String, String> pipeHashMap) {
+	public void saveToTreeGlobal(@BindingParam("pipeHashMap") Map<String, String> pipeHashMap) {
 		//System.out.println("**DEBUG** pipeHashMap RECEIVED: " + pipeHashMap);
-		new DraggableTreeCmsElement(selectedElement, pipeHashMap.get("id"), FragmentType.valueOf(pipeHashMap.get("fragmentType")), pipeHashMap);
+		DraggableTreeCmsElement newElement =  new DraggableTreeCmsElement(selectedElement, pipeHashMap.get("id"), FragmentType.valueOf(pipeHashMap.get("fragmentType")), pipeHashMap);
+		pipeHashMap.put("parentId", selectedElement.getDescription());
+		pipeHashMap.put("siblingsPosition", ((Integer)selectedElement.getChilds().indexOf(newElement)).toString());
+		Map<String, Object> wrapperMap = new HashMap<String, Object>();
+		wrapperMap.put("pipeHashMap", pipeHashMap);
+		BindUtils.postGlobalCommand(null, null, "genPageGlobal", wrapperMap);
 	}
 	
 }

@@ -16,7 +16,7 @@
 		</hbox>
 		<space />
 		<hbox>
-			<button label="Save" onClick="@global-command('saveToTreeGlobal', pipeMap=titleVm.pipeHashMap)"/> 
+			<button label="Save" onClick="@command('saveToTree')"/> 
 		</hbox>
 	</vbox>
 </hlayout>

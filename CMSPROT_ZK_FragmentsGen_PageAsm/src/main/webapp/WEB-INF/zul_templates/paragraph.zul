@@ -7,8 +7,8 @@
 		<space />
 		<label value="Color: "></label>
 		<radiogroup selectedItem="@bind(paragraphVm.pipeHashMap['color'])">
-			<radio label="Orange" value="red"/>
-			<radio label="Blue" value="orange"/>
+			<radio label="Orange" value="orange"/>
+			<radio label="Blue" value="blue"/>
 		</radiogroup>
 		<hbox>
 			<label value="Paragraph: "/>
@@ -16,7 +16,7 @@
 		</hbox>
 		<space />
 		<hbox>
-			<button label="Save" onClick="@global-command('saveToTreeGlobal', pipeMap=paragraphVm.pipeHashMap)"/> 
+			<button label="Save" onClick="@command('saveToTree')"/> 
 		</hbox>
 	</vbox>
 </hlayout>
