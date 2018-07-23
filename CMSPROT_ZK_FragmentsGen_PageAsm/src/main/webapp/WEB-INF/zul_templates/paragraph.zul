@@ -1,22 +1,25 @@
-<hlayout id="paragraphEdit" viewModel="@id('paragraphVm') @init('CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm.ParagraphVM')"> <!-- NOTE: a wrapper component like this one is mandatory (you can also simply use <zk>) -->
+<hlayout id="titleEdit"
+		 viewModel="@id('paragraphVm') @init('CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm.ParagraphVM')">
 	<vbox>
 		<hbox>
 			<label value="Id: " style="color: red;"/>
 			<textbox value="@bind(paragraphVm.pipeHashMap['id'])"/>
 		</hbox>
-		<space />
+		<space/>
+		
 		<label value="Color: "></label>
 		<radiogroup selectedItem="@bind(paragraphVm.pipeHashMap['color'])">
 			<radio label="Orange" value="orange"/>
 			<radio label="Blue" value="blue"/>
 		</radiogroup>
 		<hbox>
-			<label value="Paragraph: "/>
+			<label value="Paragraph text: "/>
 			<textbox value="@bind(paragraphVm.pipeHashMap['text'])"/>
 		</hbox>
-		<space />
+		
+		<space/>
 		<hbox>
-			<button label="Save" onClick="@command('saveToTree')"/> 
+			<button label="Save" onClick="@command('saveElement')"/> 
 		</hbox>
 	</vbox>
 </hlayout>

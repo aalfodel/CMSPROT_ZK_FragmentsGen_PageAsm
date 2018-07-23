@@ -1,22 +1,25 @@
-<hlayout id="titleEdit" viewModel="@id('titleVm') @init('CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm.TitleVM')">
+<hlayout id="titleEdit"
+		 viewModel="@id('titleVm') @init('CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm.TitleVM')">
 	<vbox>
 		<hbox>
 			<label value="Id: " style="color: red;"/>
 			<textbox value="@bind(titleVm.pipeHashMap['id'])"/>
 		</hbox>
-		<space />
+		<space/>
+		
 		<label value="Color: "></label>
 		<radiogroup selectedItem="@bind(titleVm.pipeHashMap['color'])">
 			<radio label="Red" value="red"/>
 			<radio label="Green" value="green"/>
 		</radiogroup>
 		<hbox>
-			<label value="Title: "/>
+			<label value="Title text: "/>
 			<textbox value="@bind(titleVm.pipeHashMap['text'])"/>
 		</hbox>
-		<space />
+		
+		<space/>
 		<hbox>
-			<button label="Save" onClick="@command('saveToTree')"/> 
+			<button label="Save" onClick="@command('saveElement')"/> 
 		</hbox>
 	</vbox>
 </hlayout>

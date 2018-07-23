@@ -27,15 +27,16 @@ public class ParagraphVM {
 	}
 	
 	@Command
-	public void saveToTree() {
+	public void saveElement() {
 		Map<String, Object> wrapperMap = new HashMap<String, Object>();
 		wrapperMap.put("pipeHashMap", pipeHashMap);
-		BindUtils.postGlobalCommand(null, null, "saveToTreeGlobal", wrapperMap);
+		BindUtils.postGlobalCommand(null, null, "saveToDraggableTreeGlobal", wrapperMap);
+		//TODO auto close popup after save
 	}
 	
-	//detatches the window from the DOM
-	@Command
-	public void detachPopup(@ContextParam(ContextType.VIEW) Window component) {
-		component.detach();
-	}
+//	//NOTE: doesn't hide, but *detaches* the window from the DOM
+//	@Command
+//	public void detachPopup(@ContextParam(ContextType.VIEW) Window component) {
+//		component.detach();
+//	}
 }
