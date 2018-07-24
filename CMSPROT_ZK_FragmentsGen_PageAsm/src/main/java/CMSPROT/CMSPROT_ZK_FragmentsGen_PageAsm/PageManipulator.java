@@ -81,9 +81,9 @@ public class PageManipulator {
 	private void saveTreeToFile() throws IOException {
 		FileUtils.writeStringToFile(mainPage, docTree.html(), "UTF-8"); 
 		if (debug) {
-			System.out.println("\n------------------ RE-GENERATED PAGE: " + mainPage);
+			System.out.println("\n**** RE-GENERATED PAGE: " + mainPage);
 			System.out.println(docTree.html());
-			System.out.println("-------------------------------------------------");
+			System.out.println("****");
 		}
 	}
 	

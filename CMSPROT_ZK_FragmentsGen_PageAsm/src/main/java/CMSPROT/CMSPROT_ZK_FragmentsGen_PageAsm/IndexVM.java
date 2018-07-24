@@ -83,7 +83,7 @@ public class IndexVM {
 	//TODO: manage to remove the "all lowercase" restriction for zul template files
 	public String getFragmTypeZul() { 
 		if (selectedFragmentType == null) {
-			return "";
+			return null;
 		}
 	
 		return "/WEB-INF/zul_templates/" + selectedFragmentType.toLowerCase() + ".zul";
@@ -143,6 +143,7 @@ public class IndexVM {
 	@GlobalCommand
 	@NotifyChange("model")
 	public void addElementGlobal(@BindingParam("pipeHashMap") Map<String, String> pipeHashMap) throws Exception {
+		System.out.println("**DEBUG** addElementGlobal received pipeHashMap: " + pipeHashMap);
 		
 		////create new node and save it into draggableTree
 		DraggableTreeCmsElement newDraggableTreeCmsElement =  new DraggableTreeCmsElement(selectedElement, pipeHashMap);	//NOTE the pipeHashMap is COPIED into the new element
