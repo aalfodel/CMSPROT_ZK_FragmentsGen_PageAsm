@@ -31,7 +31,7 @@ public class TitleVM {
 	public void saveElement() {
 		Map<String, Object> wrapperMap = new HashMap<String, Object>();
 		wrapperMap.put("pipeHashMap", pipeHashMap);
-		BindUtils.postGlobalCommand(null, null, "saveToDraggableTreeGlobal", wrapperMap);
+		BindUtils.postGlobalCommand(null, null, "addElementGlobal", wrapperMap);
 		//TODO auto close popup after save
 	}
 	

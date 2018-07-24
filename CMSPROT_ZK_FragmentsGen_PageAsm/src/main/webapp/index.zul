@@ -6,15 +6,61 @@
 			height="100%"
 			style="padding: 0;">		
 		<borderlayout>
+		
 			<north border="0">
+				<!-- TITLE -->
 				<label value="Welcome to this simple Html Page Generator"/>
 			</north>
+			
 			<west size="25%">
-				<include src="/WEB-INF/editableTree.zul"/>
+				<div>
+					<!-- TREE -->
+					<hbox id="editableTree">
+						<draggableTree model="@load(IndexVm.model)" selectedElement="@save(IndexVm.selectedElement)"/>	<!-- TODO: if set @bind it generates an infinite loop-->
+						<space/>
+						<!-- TODO
+							<button iconSclass="z-icon-minus" disabled="@load(empty IndexVm.selectedElement or IndexVm.selectedElement eq IndexVm.root)" onClick="@command('removeElement')"/>
+							<button iconSclass="z-icon-gear" disabled="@load(empty IndexVm.selectedElement)"/>
+						 -->
+						<button iconSclass="z-icon-plus" disabled="@load(empty IndexVm.selectedElement)" onClick="@command('openPopup')"/>
+					</hbox>
+					
+					<!-- POPUP -->
+					<window id="popupWindow"
+					    	title="Add/Edit Fragment"
+					    	mode="modal" 
+						    width="60%"
+					    	height="70%"
+					    	contentStyle="overflow:auto;"
+					 		style="padding: 0;"
+							visible="@bind(IndexVm.popupVisibility)">
+						
+						<!-- SELECT MENU -->
+						<!-- TODO
+							<listbox if="${param.readonly == 'true'}"  
+							<label unless="${param.readonly == 'true'}" value=""/>
+						-->
+						<hbox>
+							<listbox model="@load(IndexVm.fragmentTypeList)" 
+									 selectedItem="@bind(IndexVm.selectedFragmentType)"
+								  	 width="100%"
+								  	 rows="1"
+								  	 mold="select"/>
+							<button label="Close Popup" onClick="@command('closePopup')"/>
+						</hbox>
+						<space/>
+						
+						<!-- VARIABLE FORM -->
+						<include src="@load(IndexVm.fragmTypeZul)"/>
+					</window>
+				</div>
 			</west>
+			
 			<center>
+				<!-- GENERATED PAGE -->
 				<iframe id="ifrInsideZk" src="generated-page.html" hflex="1" vflex="1"/>
 			</center>
+			
 		</borderlayout>
 	</window>
 </zk>
