@@ -5,10 +5,10 @@ import java.util.Map;
 
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.AfterCompose;
+import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.annotation.ContextParam;
-import org.zkoss.bind.annotation.ContextType;
-import org.zkoss.zul.Window;
+import org.zkoss.bind.annotation.GlobalCommand;
+import org.zkoss.bind.annotation.NotifyChange;
 
 public class TitleVM {
 	private Map<String, String> pipeHashMap = new HashMap<String, String>();	//WARNING the same pipeHashMap is reused at every passage! 
@@ -32,8 +32,21 @@ public class TitleVM {
 		Map<String, Object> wrapperMap = new HashMap<String, Object>();
 		wrapperMap.put("pipeHashMap", pipeHashMap);
 		BindUtils.postGlobalCommand(null, null, "addElementGlobal", wrapperMap);
-		//TODO auto close popup after save
 	}
+	
+	@GlobalCommand
+	public void test() {
+		System.out.println("GLOBAL COMMAND RECEIVED");
+	}
+	
+//	@GlobalCommand
+//	@NotifyChange("pipeHashMap")
+//	public void getModifyOldAttributes(@BindingParam("selectedElement") DraggableTreeCmsElement selectedElement) {
+//		System.out.println("**DEBUG** EXECUTING GLOBAL COMMAND getModifyOldAttributes");
+//		System.out.println("**DEBUG** getModifyOldAttributes received selectedElement: " + selectedElement);
+//		pipeHashMap = selectedElement.getElementDataMap();
+//
+//	}
 	
 //	//NOTE: doesn't hide, but *detaches* the window from the DOM
 //	@Command

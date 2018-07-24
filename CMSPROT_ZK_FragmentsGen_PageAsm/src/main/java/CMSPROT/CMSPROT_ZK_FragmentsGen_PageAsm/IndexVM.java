@@ -1,12 +1,12 @@
 package CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
@@ -59,7 +59,6 @@ public class IndexVM {
 	public DraggableTreeCmsElement getSelectedElement() {
 		return selectedElement;
 	}
-	
 
 	
 	public List<String>  getFragmentTypeList() {
@@ -76,14 +75,14 @@ public class IndexVM {
 		return selectedFragmentType;
 	}
 	
-	@NotifyChange("fragmTypeZul")
+	@NotifyChange("selectedFragmentTypeZul")
 	public void setSelectedFragmentType(String selectedFragmentType) {
 		this.selectedFragmentType = selectedFragmentType;
 	}
 	
 	//NOTE: zul templates must be in /WEB-INF/zul_templates dir and their name must be *all* lowercase
 	//TODO: manage to remove the "all lowercase" restriction for zul template files
-	public String getFragmTypeZul() { 
+	public String getSelectedFragmentTypeZul() { 	//NOTE chosen type -> get the zul file (different from below)
 		if (selectedFragmentType == null) {
 			return null;
 		}
@@ -91,6 +90,9 @@ public class IndexVM {
 		return "/WEB-INF/zul_templates/" + selectedFragmentType.toLowerCase() + ".zul";
 	}
 	
+	public String getSelectedElementTypeZul() {		//NOTE chosen element -> get the type -> get the zul file (different from above)
+		return "/WEB-INF/zul_templates/" + selectedElement.getElementDataMap().get("fragmentType").toLowerCase() + ".zul";
+	}
 	
 	
 	public String getSelectedPopup() {
@@ -128,6 +130,18 @@ public class IndexVM {
 	@NotifyChange("selectedPopup")
 	public void openPopup(@BindingParam("popupType") String popupType) {
 		selectedPopup = "/WEB-INF/" + "popup_" + popupType + ".zul";	//ex.  add -> /WEB-INF/popup_add.zul
+		if (popupType.equals("modify")) {
+			System.out.println("CALLING GLOBAL COMMAND");
+			BindUtils.postGlobalCommand(null, null, "test", null);
+//			Map<String, Object> wrapperMap = new HashMap<String, Object>();
+//			wrapperMap.put("selectedElement", selectedElement);
+//			System.err.println("**DEBUG** DATA TO SEND");
+//			System.out.println("**DEBUG** selecetdElement: " + selectedElement + " : " + selectedElement.getElementDataMap());
+//			System.out.println("**DEBUG** wrapper: " + wrapperMap);
+//			System.err.println("/DATA TO SEND");
+//			BindUtils.postGlobalCommand(null, null, "getModifyOldAttributes", wrapperMap);
+		}
+			
 	}
 	
 	@Command
@@ -142,7 +156,7 @@ public class IndexVM {
 	/////TREE OPERATIONS/////
 	
 	@GlobalCommand
-	@NotifyChange({"model","selectedPopup"})
+	@NotifyChange({"model","selectedPopup","selectedFragmentType","selectedElement"})
 	public void addElementGlobal(@BindingParam("pipeHashMap") Map<String, String> pipeHashMap) throws Exception {
 		System.out.println("**DEBUG** addElementGlobal received pipeHashMap: " + pipeHashMap);
 		
@@ -161,6 +175,7 @@ public class IndexVM {
 		forceIframeRefresh();
 		
 		closePopup();
+		selectedFragmentType = null;	//reset to show empty values to the next add
 	}
 	
 	@Command
@@ -177,7 +192,9 @@ public class IndexVM {
 		closePopup();
 	}
 	
-	//UTILITIES
+	
+	
+	/////UTILITIES/////
 	private void forceIframeRefresh() {
 		Clients.evalJavaScript("document.getElementsByTagName(\"iframe\")[0].contentWindow.location.reload(true);");	//see: https://stackoverflow.com/questions/13477451/can-i-force-a-hard-refresh-on-an-iframe-with-javascript?lq=1
 		System.out.println("**DEBUG** Forced Iframe refresh.");

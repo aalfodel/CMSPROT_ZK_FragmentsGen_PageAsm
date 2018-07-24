@@ -18,5 +18,5 @@
 	<space/>
 	
 	<!-- VARIABLE FORM -->
-	<include src="@load(IndexVm.fragmTypeZul)"/>
+	<include src="@load(IndexVm.selectedFragmentTypeZul)"/>
 </window>
