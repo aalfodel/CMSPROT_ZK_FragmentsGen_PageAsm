@@ -144,11 +144,9 @@ public class IndexVM {
 	@NotifyChange("model")
 	public void addElementGlobal(@BindingParam("pipeHashMap") Map<String, String> pipeHashMap) throws Exception {
 		
-		Map<String, String> newElDataMap = new HashMap<String, String>(pipeHashMap);	//WARNING we need a copy here, not just the reference! (because we'll reuse the same pipeHashMap instance for every passage of the specific fragment type viewmodel)
-																						//NOTE: it's a shallow copy, but they're all strings so we're ok
-		
 		////create new node and save it into draggableTree
-		DraggableTreeCmsElement newDraggableTreeCmsElement =  new DraggableTreeCmsElement(selectedElement, newElDataMap);	
+		DraggableTreeCmsElement newDraggableTreeCmsElement =  new DraggableTreeCmsElement(selectedElement, pipeHashMap);	//NOTE the pipeHashMap is COPIED into the new element
+		Map<String, String> newElDataMap = newDraggableTreeCmsElement.getElementDataMap();	//just saved for later brevity
 		newElDataMap.put("parentId", selectedElement.getElementDataMap().get("id"));
 		newElDataMap.put("siblingsPosition", ( (Integer)selectedElement.getChilds().indexOf(newDraggableTreeCmsElement) ).toString());	//can't call .toString on primitive type int, so I use Integer
 	
