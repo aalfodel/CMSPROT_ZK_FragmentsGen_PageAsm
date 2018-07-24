@@ -1,6 +1,7 @@
 package CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.WebApps;
 import org.zkoss.zk.ui.util.Clients;
 
+import biz.opengate.zkComponents.draggableTree.DraggableTreeComponent;
 import biz.opengate.zkComponents.draggableTree.DraggableTreeModel;
 
 public class IndexVM {
@@ -25,8 +27,8 @@ public class IndexVM {
 	private List<String> fragmentTypeList;
 	private String selectedFragmentType;
 	
-	private boolean popupVisibility;
-	
+	private String selectedPopup;
+
 	private PageManipulator pageManip;
 	private FragmentGenerator fragmentGen;
 	
@@ -91,12 +93,12 @@ public class IndexVM {
 	
 	
 	
-	public boolean isPopupVisibility() {
-		return popupVisibility;
+	public String getSelectedPopup() {
+		return selectedPopup;
 	}
 
-	public void setPopupVisibility(boolean popupVisibility) {
-		this.popupVisibility = popupVisibility;
+	public void setSelectedPopup(String selectedPopup) {
+		this.selectedPopup = selectedPopup;
 	}
 	
 	
@@ -120,28 +122,27 @@ public class IndexVM {
 	}
 	
 	
-	/////POPUP WINDOW/////
+	/////POPUP WINDOWS/////
 	
 	@Command
-	@NotifyChange("popupVisibility")
+	@NotifyChange("selectedPopup")
+	public void openPopup(@BindingParam("popupType") String popupType) {
+		selectedPopup = "/WEB-INF/" + "popup_" + popupType + ".zul";	//ex.  add -> /WEB-INF/popup_add.zul
+	}
+	
+	@Command
+	@NotifyChange("selectedPopup")
 	public void closePopup() {
-		popupVisibility = false;
+		selectedPopup = null;
 	}
-	
-	@Command
-	@NotifyChange("popupVisibility")
-	public void openPopup() {
-		popupVisibility = true;
 		
-		//create new component and attach it to DOM
-		//Executions.createComponents("/WEB-INF/zul_templates/title.zul", null,null);	
-	}
-	
-	
+//	create new component and attach it to DOM
+//	Executions.createComponents("/WEB-INF/zul_templates/title.zul", null,null);		
+
 	/////TREE OPERATIONS/////
 	
 	@GlobalCommand
-	@NotifyChange("model")
+	@NotifyChange({"model","selectedPopup"})
 	public void addElementGlobal(@BindingParam("pipeHashMap") Map<String, String> pipeHashMap) throws Exception {
 		System.out.println("**DEBUG** addElementGlobal received pipeHashMap: " + pipeHashMap);
 		
@@ -158,29 +159,23 @@ public class IndexVM {
 		pageManip.addFragment(newFragmentHtml, newElDataMap.get("parentId"), Integer.parseInt(newElDataMap.get("siblingsPosition")));																
 		//force iframe refresh (using client-side js)
 		forceIframeRefresh();
+		
+		closePopup();
 	}
 	
-//	@Command
-//	@NotifyChange("model")
-//	public void removeElement() {
-//		Map<String, Object> pipeHashMap = new HashMap<String, Object>();
-//		pipeHashMap.put("fragmentId", selectedElement.getElementDataMap().get("id"));
-//		BindUtils.postGlobalCommand(null, null, "removeFragmentGlobal", pipeHashMap);
-//		
-//		DraggableTreeComponent.removeFromParent(selectedElement);
-//		root.recomputeSpacersRecursive();
-//	}
-//	
-//	//FRAGMENT REMOVAL
-//	
-//	@GlobalCommand("removeFragmentGlobal")
-//	public void removeFragment(@BindingParam("fragmentId") String fragmentId) throws Exception {
-//		System.out.println("**DEBUG** removeFragmentGlobal RECEIVED ID: " + fragmentId);
-//		
-//		pageManip.removeFragment(fragmentId);
-//		forceIframeRefresh();
-//	}
-	
+	@Command
+	@NotifyChange({"model","selectedPopup"})
+	public void removeElement() throws Exception {
+		//remove from output page
+		pageManip.removeFragment(selectedElement.getElementDataMap().get("id"));
+		forceIframeRefresh();
+		
+		//remove from draggableTree
+		DraggableTreeComponent.removeFromParent(selectedElement);
+		root.recomputeSpacersRecursive();
+		
+		closePopup();
+	}
 	
 	//UTILITIES
 	private void forceIframeRefresh() {
