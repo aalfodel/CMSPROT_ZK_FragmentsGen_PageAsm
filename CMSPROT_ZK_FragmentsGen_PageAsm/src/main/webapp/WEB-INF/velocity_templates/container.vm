@@ -1,0 +1,1 @@
+<div id="$map.get("id")" style="border-style: $map.get("border-style"); border-width: $map.get("border-width"); border-color: $map.get("border-color")"></div>
