@@ -19,7 +19,7 @@
 		
 		<space/>
 		<hbox>
-			<button label="Save" onClick="@command('saveElement')"/> 
+			<button label="@bind(IndexVm.popupType.toUpperCase())" onClick="@command('saveElement', opType=IndexVm.popupType)"/>
 		</hbox>
 	</vbox>
 </hlayout>

@@ -14,6 +14,8 @@ public class TitleVM {
 	private Map<String, String> pipeHashMap = new HashMap<String, String>();	//WARNING the same pipeHashMap is reused at every passage! 
 																				//I solved this problem in the draggableTree element creation: the pipeHashMap gets cloned
 	
+	//GETTERS SETTERS
+	
 	public Map<String, String> getPipeHashMap() {
 		return pipeHashMap;
 	}
@@ -22,17 +24,23 @@ public class TitleVM {
 		this.pipeHashMap = pipeHashMap;
 	}
 	
+	//INITIALIZATION
+	
 	@AfterCompose
 	public void initFragmentType() {
 		pipeHashMap.put("fragmentType", "TITLE");
 	}
 	
+	//TREE OPERATIONS
+	
 	@Command
-	public void saveElement() {
+	public void saveElement(@BindingParam("opType") String operationType) {
 		Map<String, Object> wrapperMap = new HashMap<String, Object>();
 		wrapperMap.put("pipeHashMap", pipeHashMap);
-		BindUtils.postGlobalCommand(null, null, "addElementGlobal", wrapperMap);
+		BindUtils.postGlobalCommand(null, null, (operationType + "ElementGlobal"), wrapperMap);		//NOTE the possible commands are "addElementGlobal" or "modifyElementGlobal"
 	}
+	
+	//POPUP
 	
 	//get draggableTree selected element data to fill the form in the "modify" popup
 	@GlobalCommand

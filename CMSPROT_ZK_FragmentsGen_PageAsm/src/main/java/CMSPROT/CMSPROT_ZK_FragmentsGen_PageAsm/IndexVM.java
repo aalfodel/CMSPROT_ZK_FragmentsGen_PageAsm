@@ -28,6 +28,7 @@ public class IndexVM {
 	private String selectedFragmentType;
 	
 	private String selectedPopup;
+	private String popupType;
 
 	private PageManipulator pageManip;
 	private FragmentGenerator fragmentGen;
@@ -103,6 +104,14 @@ public class IndexVM {
 		this.selectedPopup = selectedPopup;
 	}
 	
+	public String getPopupType() {
+		return popupType;
+	}
+
+	public void setPopupType(String popupType) {
+		this.popupType = popupType;
+	}
+	
 	
 	/////STARTUP/////
 	
@@ -127,9 +136,17 @@ public class IndexVM {
 	/////POPUP WINDOWS/////
 	
 	@Command
-	@NotifyChange("selectedPopup")
+	@NotifyChange({"selectedPopup", "popupType"})
 	public void openPopup(@BindingParam("popupType") String popupType) {
 		selectedPopup = "/WEB-INF/" + "popup_" + popupType + ".zul";	//ex.  add -> /WEB-INF/popup_add.zul
+		this.popupType = popupType;
+	}
+	
+	@Command
+	@NotifyChange({"selectedPopup", "popupType"})
+	public void closePopup() {
+		selectedPopup = null;
+		popupType = null;
 	}
 	
 	//TODO This one works but it's ugly. Find an alternative solution
@@ -145,12 +162,6 @@ public class IndexVM {
 		BindUtils.postGlobalCommand(null, null, "getDataToFillPopupInner", wrapperMap);
 		
 	}
-	
-	@Command
-	@NotifyChange("selectedPopup")
-	public void closePopup() {
-		selectedPopup = null;
-	}
 		
 //	create new component and attach it to DOM
 //	Executions.createComponents("/WEB-INF/zul_templates/title.zul", null,null);		
@@ -162,13 +173,13 @@ public class IndexVM {
 	public void addElementGlobal(@BindingParam("pipeHashMap") Map<String, String> pipeHashMap) throws Exception {
 		System.out.println("**DEBUG** addElementGlobal received pipeHashMap: " + pipeHashMap);
 		
-		////create new node and save it into draggableTree
+		/*create new node and save it into draggableTree*/
 		DraggableTreeCmsElement newDraggableTreeCmsElement =  new DraggableTreeCmsElement(selectedElement, pipeHashMap);	//NOTE the pipeHashMap is COPIED into the new element
 		Map<String, String> newElDataMap = newDraggableTreeCmsElement.getElementDataMap();	//just saved for later brevity
 		newElDataMap.put("parentId", selectedElement.getElementDataMap().get("id"));
 		newElDataMap.put("siblingsPosition", ( (Integer)selectedElement.getChilds().indexOf(newDraggableTreeCmsElement) ).toString());	//can't call .toString on primitive type int, so I use Integer
 	
-		////create new DOM node and write it to output page
+		/*create new DOM node and write it to output page*/
 		//generate fragment code with Velocity
 		String newFragmentHtml = fragmentGen.generateFragmentHtml(FragmentType.valueOf(newElDataMap.get("fragmentType")), newElDataMap);
 		//rebuild the output page with the new fragment
@@ -194,6 +205,30 @@ public class IndexVM {
 		closePopup();
 	}
 	
+	//TODO ************************TO COMPLETE IMPLEMENTATION*****************************
+	@GlobalCommand
+	@NotifyChange({"model","selectedPopup","selectedFragmentType","selectedElement"})
+	public void modifyElementGlobal(@BindingParam("pipeHashMap") Map<String, String> pipeHashMap) throws Exception {
+		System.out.println("**DEBUG** modifyElementGlobal received pipeHashMap: " + pipeHashMap);
+		
+		/*create new node and save it into draggableTree*/
+//		DraggableTreeCmsElement newDraggableTreeCmsElement =  new DraggableTreeCmsElement(selectedElement, pipeHashMap);	//NOTE the pipeHashMap is COPIED into the new element
+//		Map<String, String> newElDataMap = newDraggableTreeCmsElement.getElementDataMap();	//just saved for later brevity
+//		newElDataMap.put("parentId", selectedElement.getElementDataMap().get("id"));
+//		newElDataMap.put("siblingsPosition", ( (Integer)selectedElement.getChilds().indexOf(newDraggableTreeCmsElement) ).toString());	//can't call .toString on primitive type int, so I use Integer
+//	
+//		/*create new DOM node and write it to output page*/
+//		//generate fragment code with Velocity
+//		String newFragmentHtml = fragmentGen.generateFragmentHtml(FragmentType.valueOf(newElDataMap.get("fragmentType")), newElDataMap);
+//		//rebuild the output page with the new fragment
+//		pageManip.addFragment(newFragmentHtml, newElDataMap.get("parentId"), Integer.parseInt(newElDataMap.get("siblingsPosition")));																
+//		//force iframe refresh (using client-side js)
+//		forceIframeRefresh();
+		
+		closePopup();
+		selectedFragmentType = null;	//reset to show empty values to the next add
+	}
+	
 	
 	
 	/////UTILITIES/////
@@ -203,6 +238,8 @@ public class IndexVM {
 	}
 	
 }
+
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
