@@ -130,18 +130,20 @@ public class IndexVM {
 	@NotifyChange("selectedPopup")
 	public void openPopup(@BindingParam("popupType") String popupType) {
 		selectedPopup = "/WEB-INF/" + "popup_" + popupType + ".zul";	//ex.  add -> /WEB-INF/popup_add.zul
-		if (popupType.equals("modify")) {
-			System.out.println("CALLING GLOBAL COMMAND");
-			BindUtils.postGlobalCommand(null, null, "test", null);
-//			Map<String, Object> wrapperMap = new HashMap<String, Object>();
-//			wrapperMap.put("selectedElement", selectedElement);
-//			System.err.println("**DEBUG** DATA TO SEND");
-//			System.out.println("**DEBUG** selecetdElement: " + selectedElement + " : " + selectedElement.getElementDataMap());
-//			System.out.println("**DEBUG** wrapper: " + wrapperMap);
-//			System.err.println("/DATA TO SEND");
-//			BindUtils.postGlobalCommand(null, null, "getModifyOldAttributes", wrapperMap);
-		}
-			
+	}
+	
+	//TODO This one works but it's ugly. Find an alternative solution
+	//send draggableTree selected element data to fill the form in the "modify" popup
+	@GlobalCommand
+	public void passDataToFillPopupInner() {
+		Map<String, Object> wrapperMap = new HashMap<String, Object>();
+		wrapperMap.put("selectedElement", selectedElement);
+		//System.out.println("**DEBUG** -passDataToFillPopupInner DATA TO SEND-:");
+		//System.out.println("**DEBUG** \tselectedElement: " + selectedElement + " HAS " + selectedElement.getElementDataMap());
+		//System.out.println("**DEBUG** \twrapper: " + wrapperMap);
+		//System.out.println("**DEBUG** -/passDataToFillPopupInner-");
+		BindUtils.postGlobalCommand(null, null, "getDataToFillPopupInner", wrapperMap);
+		
 	}
 	
 	@Command

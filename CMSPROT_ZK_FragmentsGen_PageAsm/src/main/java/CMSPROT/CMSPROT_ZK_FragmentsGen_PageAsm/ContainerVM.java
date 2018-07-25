@@ -5,7 +5,10 @@ import java.util.Map;
 
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.AfterCompose;
+import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.GlobalCommand;
+import org.zkoss.bind.annotation.NotifyChange;
 
 public class ContainerVM {
 	private Map<String, String> pipeHashMap = new HashMap<String, String>();	//WARNING the same pipeHashMap is reused at every passage! 
@@ -29,7 +32,15 @@ public class ContainerVM {
 		Map<String, Object> wrapperMap = new HashMap<String, Object>();
 		wrapperMap.put("pipeHashMap", pipeHashMap);
 		BindUtils.postGlobalCommand(null, null, "addElementGlobal", wrapperMap);
-		//TODO auto close popup after save
+	}
+	
+	//get draggableTree selected element data to fill the form in the "modify" popup
+	@GlobalCommand
+	@NotifyChange("pipeHashMap")
+	public void getDataToFillPopupInner(@BindingParam("selectedElement") DraggableTreeCmsElement selectedElement) {
+		//System.out.println("**DEBUG** EXECUTING GLOBAL COMMAND getDataToFillPopupInner");
+		//System.out.println("**DEBUG** getDataToFillPopupInner received selectedElement: " + selectedElement);
+		pipeHashMap = selectedElement.getElementDataMap();
 	}
 	
 //	//NOTE: doesn't hide, but *detaches* the window from the DOM

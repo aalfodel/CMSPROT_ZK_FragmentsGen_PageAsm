@@ -34,19 +34,14 @@ public class TitleVM {
 		BindUtils.postGlobalCommand(null, null, "addElementGlobal", wrapperMap);
 	}
 	
+	//get draggableTree selected element data to fill the form in the "modify" popup
 	@GlobalCommand
-	public void test() {
-		System.out.println("GLOBAL COMMAND RECEIVED");
+	@NotifyChange("pipeHashMap")
+	public void getDataToFillPopupInner(@BindingParam("selectedElement") DraggableTreeCmsElement selectedElement) {
+		//System.out.println("**DEBUG** EXECUTING GLOBAL COMMAND getDataToFillPopupInner");
+		//System.out.println("**DEBUG** getDataToFillPopupInner received selectedElement: " + selectedElement);
+		pipeHashMap = selectedElement.getElementDataMap();
 	}
-	
-//	@GlobalCommand
-//	@NotifyChange("pipeHashMap")
-//	public void getModifyOldAttributes(@BindingParam("selectedElement") DraggableTreeCmsElement selectedElement) {
-//		System.out.println("**DEBUG** EXECUTING GLOBAL COMMAND getModifyOldAttributes");
-//		System.out.println("**DEBUG** getModifyOldAttributes received selectedElement: " + selectedElement);
-//		pipeHashMap = selectedElement.getElementDataMap();
-//
-//	}
 	
 //	//NOTE: doesn't hide, but *detaches* the window from the DOM
 //	@Command

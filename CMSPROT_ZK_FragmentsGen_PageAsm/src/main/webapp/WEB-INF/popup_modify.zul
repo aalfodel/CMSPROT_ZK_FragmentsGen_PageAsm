@@ -16,5 +16,5 @@
 	<space/>
 	
 	<!-- FORM -->
-	<include src="@bind(IndexVm.selectedElementTypeZul)"/>	<!-- can't do like before because the zul path is not a field but needs to be calculated -->
+	<include src="@load(IndexVm.selectedElementTypeZul)"/>	 <!-- can't do like before because the zul path is not a field but needs to be calculated -->
 </window>
