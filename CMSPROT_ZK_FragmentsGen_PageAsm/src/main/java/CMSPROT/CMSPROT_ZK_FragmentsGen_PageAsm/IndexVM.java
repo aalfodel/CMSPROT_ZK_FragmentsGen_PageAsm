@@ -212,37 +212,18 @@ public class IndexVM {
 	public void modifyElementGlobal(@BindingParam("pipeHashMap") Map<String, String> pipeHashMap) throws Exception {
 		System.out.println("**DEBUG** modifyElementGlobal received pipeHashMap: " + pipeHashMap);
 		
-		/*create new node and save it into draggableTree*/
-		DraggableTreeCmsElement newDraggableTreeCmsElement =  new DraggableTreeCmsElement(selectedElement.getParent(), pipeHashMap);	//NOTE the pipeHashMap is COPIED into the new element
-		for (DraggableTreeElement currentEl : selectedElement.getChilds()) {
-			if (currentEl instanceof DraggableTreeCmsElement) {
-				new DraggableTreeCmsElement(newDraggableTreeCmsElement, ((DraggableTreeCmsElement) currentEl).getElementDataMap());
-			}
-		}
-		DraggableTreeComponent.removeFromParent(selectedElement);
-		root.recomputeSpacersRecursive();
+		String oldId = selectedElement.getDescription();	//NOTE the description field of DraggableTreeElement is the one shown in the tree, so we previously set it to equal the id
 		
+		//update draggableTree
+		selectedElement.setDescription(pipeHashMap.get("id"));	//we now set the description with the *updated* id
+		selectedElement.setElementDataMap(pipeHashMap);
 		
-		Map<String, String> newElDataMap = newDraggableTreeCmsElement.getElementDataMap();	//just saved for later brevity
-		/*create new DOM node and write it to output page*/
-		//generate fragment code with Velocity
-		String newFragmentHtml = fragmentGen.generateFragmentHtml(FragmentType.valueOf(newElDataMap.get("fragmentType")), newElDataMap);
-		//rebuild the output page with the new fragment
-		pageManip.addFragment(newFragmentHtml, newElDataMap.get("parentId"), Integer.parseInt(newElDataMap.get("siblingsPosition")));																
+		//update DOM e html page
+		String newFragmentHtml = fragmentGen.generateFragmentHtml(FragmentType.valueOf(pipeHashMap.get("fragmentType")), pipeHashMap);
+		pageManip.updateFragment(newFragmentHtml, oldId);
+		
 		//force iframe refresh (using client-side js)
 		forceIframeRefresh();
-
-
-	
-		
-//	
-//		/*create new DOM node and write it to output page*/
-//		//generate fragment code with Velocity
-//		String newFragmentHtml = fragmentGen.generateFragmentHtml(FragmentType.valueOf(newElDataMap.get("fragmentType")), newElDataMap);
-//		//rebuild the output page with the new fragment
-//		pageManip.addFragment(newFragmentHtml, newElDataMap.get("parentId"), Integer.parseInt(newElDataMap.get("siblingsPosition")));																
-//		//force iframe refresh (using client-side js)
-//		forceIframeRefresh();
 		
 		closePopup();
 	}

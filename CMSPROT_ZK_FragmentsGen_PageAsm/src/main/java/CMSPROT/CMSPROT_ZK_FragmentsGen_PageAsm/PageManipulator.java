@@ -154,8 +154,13 @@ public class PageManipulator {
 			printNodeRecursive(newFragmentTree);
 		}
 		
-		Element oldFragmentTree = docTree.getElementById(oldFragmentId);
-		oldFragmentTree.replaceWith(newFragmentTree);
+		Element oldFragmentNode = docTree.getElementById(oldFragmentId);
+		List<Node> oldFragmentNodeChildren = oldFragmentNode.childNodes();
+		
+		oldFragmentNode.replaceWith(newFragmentTree);
+		for (Node child : oldFragmentNodeChildren) {
+			newFragmentTree.appendChild(child);
+		}
 		if (debug) {
 			System.out.println("\n+OUT TREE (update)+\n");
 			printNodeRecursive(docTree);
