@@ -3,6 +3,7 @@ package CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import org.zkoss.zk.ui.WebApps;
 import org.zkoss.zk.ui.util.Clients;
 
 import biz.opengate.zkComponents.draggableTree.DraggableTreeComponent;
+import biz.opengate.zkComponents.draggableTree.DraggableTreeElement;
 import biz.opengate.zkComponents.draggableTree.DraggableTreeModel;
 
 public class IndexVM {
@@ -169,7 +171,7 @@ public class IndexVM {
 	/////TREE OPERATIONS/////
 	
 	@GlobalCommand
-	@NotifyChange({"model","selectedPopup","selectedFragmentType","selectedElement"})
+	@NotifyChange({"model","selectedFragmentType","selectedPopup", "popupType"})
 	public void addElementGlobal(@BindingParam("pipeHashMap") Map<String, String> pipeHashMap) throws Exception {
 		System.out.println("**DEBUG** addElementGlobal received pipeHashMap: " + pipeHashMap);
 		
@@ -192,7 +194,7 @@ public class IndexVM {
 	}
 	
 	@Command
-	@NotifyChange({"model","selectedPopup"})
+	@NotifyChange({"model","selectedPopup","popupType"})
 	public void removeElement() throws Exception {
 		//remove from output page
 		pageManip.removeFragment(selectedElement.getElementDataMap().get("id"));
@@ -205,17 +207,34 @@ public class IndexVM {
 		closePopup();
 	}
 	
-	//TODO ************************TO COMPLETE IMPLEMENTATION*****************************
 	@GlobalCommand
-	@NotifyChange({"model","selectedPopup","selectedFragmentType","selectedElement"})
+	@NotifyChange({"model","selectedPopup","popupType"})
 	public void modifyElementGlobal(@BindingParam("pipeHashMap") Map<String, String> pipeHashMap) throws Exception {
 		System.out.println("**DEBUG** modifyElementGlobal received pipeHashMap: " + pipeHashMap);
 		
 		/*create new node and save it into draggableTree*/
-//		DraggableTreeCmsElement newDraggableTreeCmsElement =  new DraggableTreeCmsElement(selectedElement, pipeHashMap);	//NOTE the pipeHashMap is COPIED into the new element
-//		Map<String, String> newElDataMap = newDraggableTreeCmsElement.getElementDataMap();	//just saved for later brevity
-//		newElDataMap.put("parentId", selectedElement.getElementDataMap().get("id"));
-//		newElDataMap.put("siblingsPosition", ( (Integer)selectedElement.getChilds().indexOf(newDraggableTreeCmsElement) ).toString());	//can't call .toString on primitive type int, so I use Integer
+		DraggableTreeCmsElement newDraggableTreeCmsElement =  new DraggableTreeCmsElement(selectedElement.getParent(), pipeHashMap);	//NOTE the pipeHashMap is COPIED into the new element
+		for (DraggableTreeElement currentEl : selectedElement.getChilds()) {
+			if (currentEl instanceof DraggableTreeCmsElement) {
+				new DraggableTreeCmsElement(newDraggableTreeCmsElement, ((DraggableTreeCmsElement) currentEl).getElementDataMap());
+			}
+		}
+		DraggableTreeComponent.removeFromParent(selectedElement);
+		root.recomputeSpacersRecursive();
+		
+		
+		Map<String, String> newElDataMap = newDraggableTreeCmsElement.getElementDataMap();	//just saved for later brevity
+		/*create new DOM node and write it to output page*/
+		//generate fragment code with Velocity
+		String newFragmentHtml = fragmentGen.generateFragmentHtml(FragmentType.valueOf(newElDataMap.get("fragmentType")), newElDataMap);
+		//rebuild the output page with the new fragment
+		pageManip.addFragment(newFragmentHtml, newElDataMap.get("parentId"), Integer.parseInt(newElDataMap.get("siblingsPosition")));																
+		//force iframe refresh (using client-side js)
+		forceIframeRefresh();
+
+
+	
+		
 //	
 //		/*create new DOM node and write it to output page*/
 //		//generate fragment code with Velocity
@@ -226,7 +245,6 @@ public class IndexVM {
 //		forceIframeRefresh();
 		
 		closePopup();
-		selectedFragmentType = null;	//reset to show empty values to the next add
 	}
 	
 	
@@ -249,7 +267,6 @@ public class IndexVM {
 //public void deleteNode(){
 //DraggableTreeComponent.removeFromParent(selectedElement);
 //root.recomputeSpacersRecursive();
-//idList.remove(selectedElement.getAttributeDataMap().get("id"));
 //}
 
 //@NotifyChange("*")
