@@ -3,11 +3,9 @@ package CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
@@ -17,7 +15,6 @@ import org.zkoss.zk.ui.WebApps;
 import org.zkoss.zk.ui.util.Clients;
 
 import biz.opengate.zkComponents.draggableTree.DraggableTreeComponent;
-import biz.opengate.zkComponents.draggableTree.DraggableTreeElement;
 import biz.opengate.zkComponents.draggableTree.DraggableTreeModel;
 
 public class IndexVM {
@@ -138,7 +135,7 @@ public class IndexVM {
 	/////POPUP WINDOWS/////
 	
 	@Command
-	@NotifyChange({"selectedPopup", "popupType"})
+	@NotifyChange({"selectedPopup","popupType"})
 	public void openPopup(@BindingParam("popupType") String popupType) {
 		selectedPopup = "/WEB-INF/" + "popup_" + popupType + ".zul";	//ex.  add -> /WEB-INF/popup_add.zul
 		this.popupType = popupType;
@@ -149,20 +146,6 @@ public class IndexVM {
 	public void closePopup() {
 		selectedPopup = null;
 		popupType = null;
-	}
-	
-	//TODO This one works but it's ugly. Find an alternative solution
-	//send draggableTree selected element data to fill the form in the "modify" popup
-	@GlobalCommand
-	public void passDataToFillPopupInner() {
-		Map<String, Object> wrapperMap = new HashMap<String, Object>();
-		wrapperMap.put("selectedElement", selectedElement);
-		//System.out.println("**DEBUG** -passDataToFillPopupInner DATA TO SEND-:");
-		//System.out.println("**DEBUG** \tselectedElement: " + selectedElement + " HAS " + selectedElement.getElementDataMap());
-		//System.out.println("**DEBUG** \twrapper: " + wrapperMap);
-		//System.out.println("**DEBUG** -/passDataToFillPopupInner-");
-		BindUtils.postGlobalCommand(null, null, "getDataToFillPopupInner", wrapperMap);
-		
 	}
 		
 //	create new component and attach it to DOM
@@ -207,6 +190,7 @@ public class IndexVM {
 		closePopup();
 	}
 	
+	//TODO ***************finish and review***********************
 	@GlobalCommand
 	@NotifyChange({"model","selectedPopup","popupType"})
 	public void modifyElementGlobal(@BindingParam("pipeHashMap") Map<String, String> pipeHashMap) throws Exception {

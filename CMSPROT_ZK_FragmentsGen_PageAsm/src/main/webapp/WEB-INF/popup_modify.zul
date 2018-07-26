@@ -16,5 +16,5 @@
 	<space/>
 	
 	<!-- FORM -->
-	<include src="@load(IndexVm.selectedElementTypeZul)"/>	 <!-- can't do like before because the zul path is not a field but needs to be calculated -->
+	<include dataToLoad="@load(IndexVm.selectedElement.elementDataMap)" popupType="@load(IndexVm.popupType)" src="@load(IndexVm.selectedElementTypeZul)"/>	 <!-- can't do like before because the zul path is not a field but needs to be calculated -->
 </window>

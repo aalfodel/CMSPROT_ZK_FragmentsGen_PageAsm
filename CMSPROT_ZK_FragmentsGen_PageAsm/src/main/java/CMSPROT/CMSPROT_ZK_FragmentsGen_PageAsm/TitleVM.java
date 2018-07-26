@@ -7,8 +7,8 @@ import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.annotation.GlobalCommand;
-import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.bind.annotation.ExecutionArgParam;
+import org.zkoss.bind.annotation.Init;
 
 public class TitleVM {
 	private Map<String, String> pipeHashMap = new HashMap<String, String>();	//WARNING the same pipeHashMap is reused at every passage! 
@@ -26,8 +26,14 @@ public class TitleVM {
 	
 	//INITIALIZATION
 	
+	@Init
+	public void loadFormData(@ExecutionArgParam("popupType") String popupType, @ExecutionArgParam("dataToLoad") HashMap<String, String> dataToLoad) {
+		if (popupType.equals("modify"))
+			pipeHashMap = new HashMap<String, String>(dataToLoad);
+	}
+	
 	@AfterCompose
-	public void initFragmentType() {
+	public void putFragmentType() {
 		pipeHashMap.put("fragmentType", "TITLE");
 	}
 	
@@ -40,20 +46,4 @@ public class TitleVM {
 		BindUtils.postGlobalCommand(null, null, (operationType + "ElementGlobal"), wrapperMap);		//NOTE the possible commands are "addElementGlobal" or "modifyElementGlobal"
 	}
 	
-	//POPUP
-	
-	//get draggableTree selected element data to fill the form in the "modify" popup
-	@GlobalCommand
-	@NotifyChange("pipeHashMap")
-	public void getDataToFillPopupInner(@BindingParam("selectedElement") DraggableTreeCmsElement selectedElement) {
-		//System.out.println("**DEBUG** EXECUTING GLOBAL COMMAND getDataToFillPopupInner");
-		//System.out.println("**DEBUG** getDataToFillPopupInner received selectedElement: " + selectedElement);
-		pipeHashMap = selectedElement.getElementDataMap();
-	}
-	
-//	//NOTE: doesn't hide, but *detaches* the window from the DOM
-//	@Command
-//	public void detachPopup(@ContextParam(ContextType.VIEW) Window component) {
-//		component.detach();
-//	}
 }
