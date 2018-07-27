@@ -2,18 +2,14 @@
     	title="Modify Fragment"
     	mode="modal" 
 	    width="60%"
-    	height="70%"
     	contentStyle="overflow:auto;"
- 		style="padding: 0;">
+ 		>
 	
 	<!-- TITLE -->
 	<hbox>
 		<label value="Fragment type: "/>
 		<label value="@bind(IndexVm.selectedElement.elementDataMap['fragmentType'])"/>
-		<space/>
-		<button label="Close Popup" onClick="@command('closePopup')"/>
 	</hbox>
-	<space/>
 	
 	<!-- FORM -->
 	<include src="@load(IndexVm.selectedElementTypeZul)"/>	 <!-- can't do like before because the zul path is not a field but needs to be calculated -->
