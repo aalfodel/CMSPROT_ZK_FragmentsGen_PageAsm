@@ -155,12 +155,21 @@ public class PageManipulator {
 		}
 		
 		Element oldFragmentNode = docTree.getElementById(oldFragmentId);
-		List<Node> oldFragmentNodeChildren = oldFragmentNode.childNodes();
+		System.out.println("\n**DEBUG** (updateFragment) oldFragmentNode: " + oldFragmentNode);
+		
+		List<Node> oldFragmentNodeChildren = oldFragmentNode.childNodesCopy();	//TODO if use childNodes(), for some reason the nodes gets *removed* when you try to get() one
+		List<Node> newFragmentTreeChildren = newFragmentTree.childNodesCopy();
+		System.out.println("**DEBUG** (updateFragment) oldFragmentNode childNodes: " + oldFragmentNodeChildren + " OF TYPE: " + oldFragmentNodeChildren.getClass());
+		System.out.println("**DEBUG** (updateFragment) oldFragmentNode childNodes size: " + oldFragmentNodeChildren.size());
+		System.out.println("**DEBUG** (updateFragment) newFragmentTree childNodes: " + newFragmentTreeChildren + " OF TYPE: " + newFragmentTreeChildren.getClass());
+		System.out.println("**DEBUG** (updateFragment) newFragmentTree childNodes size: " + newFragmentTreeChildren.size());
+		
+		//add the old node children to the new node, but only those not already present in the new node		
+		for (int i=newFragmentTreeChildren.size(); i<oldFragmentNodeChildren.size(); i++)		//TODO this works only because the order of the children is the same between the old and the new node; check if this is always the case
+			newFragmentTree.appendChild(oldFragmentNodeChildren.get(i));
+		System.out.println("**DEBUG** (updateFragment) newFragmentTree: " + newFragmentTree);
 		
 		oldFragmentNode.replaceWith(newFragmentTree);
-		for (Node child : oldFragmentNodeChildren) {
-			newFragmentTree.appendChild(child);
-		}
 		if (debug) {
 			System.out.println("\n+OUT TREE (update)+\n");
 			printNodeRecursive(docTree);

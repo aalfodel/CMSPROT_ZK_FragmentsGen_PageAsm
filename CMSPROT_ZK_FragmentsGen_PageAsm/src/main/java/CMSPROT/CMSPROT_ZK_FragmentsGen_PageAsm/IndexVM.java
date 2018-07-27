@@ -146,6 +146,7 @@ public class IndexVM {
 	public void closePopup() {
 		selectedPopup = null;
 		popupType = null;
+		forceIframeRefresh();	//TODO delete this from here?
 	}
 		
 //	create new component and attach it to DOM
@@ -169,9 +170,8 @@ public class IndexVM {
 		String newFragmentHtml = fragmentGen.generateFragmentHtml(FragmentType.valueOf(newElDataMap.get("fragmentType")), newElDataMap);
 		//rebuild the output page with the new fragment
 		pageManip.addFragment(newFragmentHtml, newElDataMap.get("parentId"), Integer.parseInt(newElDataMap.get("siblingsPosition")));																
-		//force iframe refresh (using client-side js)
-		forceIframeRefresh();
 		
+		forceIframeRefresh();
 		closePopup();
 		selectedFragmentType = null;	//reset to show empty values to the next add
 	}
@@ -190,7 +190,6 @@ public class IndexVM {
 		closePopup();
 	}
 	
-	//TODO ***************finish and review***********************
 	@GlobalCommand
 	@NotifyChange({"model","selectedPopup","popupType"})
 	public void modifyElementGlobal(@BindingParam("pipeHashMap") Map<String, String> pipeHashMap) throws Exception {
@@ -205,17 +204,17 @@ public class IndexVM {
 		//update DOM e html page
 		String newFragmentHtml = fragmentGen.generateFragmentHtml(FragmentType.valueOf(pipeHashMap.get("fragmentType")), pipeHashMap);
 		pageManip.updateFragment(newFragmentHtml, oldId);
-		
-		//force iframe refresh (using client-side js)
+
 		forceIframeRefresh();
-		
 		closePopup();
 	}
 	
+	//TODO ***************  moveElement()  ************************
 	
 	
 	/////UTILITIES/////
-	private void forceIframeRefresh() {
+	private void forceIframeRefresh() {		
+		//force iframe refresh (using client-side js)
 		Clients.evalJavaScript("document.getElementsByTagName(\"iframe\")[0].contentWindow.location.reload(true);");	//see: https://stackoverflow.com/questions/13477451/can-i-force-a-hard-refresh-on-an-iframe-with-javascript?lq=1
 		System.out.println("**DEBUG** Forced Iframe refresh.");
 	}

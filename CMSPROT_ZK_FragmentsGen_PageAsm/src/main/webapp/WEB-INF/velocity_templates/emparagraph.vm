@@ -1,0 +1,1 @@
+<p id="$map.get("id")" style="color: $map.get("color")">$map.get("text_before") <em>$map.get("text_emphasized")</em> $map.get("text_after")</p>

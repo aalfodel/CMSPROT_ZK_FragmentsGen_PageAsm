@@ -9,7 +9,7 @@ import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ExecutionArgParam;
 import org.zkoss.bind.annotation.Init;
 
-public class ContainerVM {
+public class EmparagraphVM {
 	
 	private Map<String, String> pipeHashMap = new HashMap<String, String>();	//WARNING the same pipeHashMap is reused at every passage! 
 																				//I solved this problem in the draggableTree element creation: the pipeHashMap gets cloned
@@ -31,7 +31,7 @@ public class ContainerVM {
 		if (popupType.equals("modify"))
 			pipeHashMap = new HashMap<String, String>(dataToLoad);	//load the Element old attributes into the form;   NOTE we need a *copy* here!
 		else	// "add"
-			pipeHashMap.put("fragmentType", "CONTAINER");	//set the type of the new Element
+			pipeHashMap.put("fragmentType", "EMPARAGRAPH");	//set the type of the new Element
 	}
 	
 	//TREE OPERATIONS

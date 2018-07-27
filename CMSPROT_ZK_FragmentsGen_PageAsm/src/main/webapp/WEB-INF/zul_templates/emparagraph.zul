@@ -1,0 +1,28 @@
+<hlayout id="emparagraphEdit"
+		 viewModel="@id('emparagraphVm') @init('CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm.EmparagraphVM')">
+	<vbox>
+		<hbox>
+			<label value="Id: " style="color: red;"/>
+			<textbox value="@bind(emparagraphVm.pipeHashMap['id'])"/>
+		</hbox>
+		<space/>
+		
+		<hbox>
+			<label value="Paragraph text before: "/>
+			<textbox value="@bind(emparagraphVm.pipeHashMap['text_before'])"/>
+		</hbox>
+		<hbox>
+			<label value="Paragraph text emphasized " style="font-style: italic;"/>
+			<textbox value="@bind(emparagraphVm.pipeHashMap['text_emphasized'])"/>
+		</hbox>
+		<hbox>
+			<label value="Paragraph text after: "/>
+			<textbox value="@bind(emparagraphVm.pipeHashMap['text_after'])"/>
+		</hbox>
+		
+		<space/>
+		<hbox>
+			<button label="@bind(IndexVm.popupType.toUpperCase())" onClick="@command('saveElement', opType=IndexVm.popupType)"/>
+		</hbox>
+	</vbox>
+</hlayout>

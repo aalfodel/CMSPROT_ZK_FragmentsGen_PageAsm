@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.zkoss.bind.BindUtils;
-import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ExecutionArgParam;
 import org.zkoss.bind.annotation.Init;
 
 public class TitleVM {
+	
 	private Map<String, String> pipeHashMap = new HashMap<String, String>();	//WARNING the same pipeHashMap is reused at every passage! 
 																				//I solved this problem in the draggableTree element creation: the pipeHashMap gets cloned
 	
@@ -27,14 +27,11 @@ public class TitleVM {
 	//INITIALIZATION
 	
 	@Init
-	public void loadFormData(@ExecutionArgParam("popupType") String popupType, @ExecutionArgParam("dataToLoad") HashMap<String, String> dataToLoad) {
+	public void init(@ExecutionArgParam("popupType") String popupType, @ExecutionArgParam("dataToLoad") HashMap<String, String> dataToLoad) {
 		if (popupType.equals("modify"))
-			pipeHashMap = new HashMap<String, String>(dataToLoad);
-	}
-	
-	@AfterCompose
-	public void putFragmentType() {
-		pipeHashMap.put("fragmentType", "TITLE");
+			pipeHashMap = new HashMap<String, String>(dataToLoad);	//load the Element old attributes into the form;   NOTE we need a *copy* here!
+		else	// "add"
+			pipeHashMap.put("fragmentType", "TITLE");	//set the type of the new Element
 	}
 	
 	//TREE OPERATIONS
